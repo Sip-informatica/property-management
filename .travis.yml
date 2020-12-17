@@ -1,0 +1,24 @@
+language: java
+#jdk: openjdk14 #problems with sonar-maven-plugin
+branches:
+  only:
+    - develop
+    - "/^release-[0-999].[0-999]$/"
+    - master
+notifications:
+  slack:
+    secure: 
+  email:
+    recipients:
+      - open.hardware.libre@gmail.com
+install:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+  - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=sip-informatica -Dsonar.login=$SONAR
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU
+  on:
+    branch: master
+  app: sip.template-ecosystem

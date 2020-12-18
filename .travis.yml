@@ -18,5 +18,5 @@ deploy:
   api_key:
     secure: $HEROKU
   on:
-    branch: master
-  app: sip.template-ecosystem
+    branch: develop
+  app: sip.property-management

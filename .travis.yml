@@ -15,8 +15,6 @@ script:
   - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=sip-informatica -Dsonar.login=$SONAR
 deploy:
   provider: heroku
-  api_key:
-    secure: $HEROKU
-  on:
-    branch: develop
-  app: sip-property-management
+  api_key: $HEROKU  
+  app: 
+    develop: sip-property-management

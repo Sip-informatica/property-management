@@ -5,9 +5,7 @@ branches:
     - develop
     - "/^release-[0-999].[0-999]$/"
     - master
-notifications:
-  slack:
-    secure: 
+notifications:  
   email:
     recipients:
       - open.hardware.libre@gmail.com

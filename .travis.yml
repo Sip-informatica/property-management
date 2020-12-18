@@ -19,4 +19,4 @@ deploy:
     secure: $HEROKU
   on:
     branch: develop
-  app: sip.property-management
+  app: sip-property-management

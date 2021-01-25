@@ -30,7 +30,7 @@ public class User {
     private String dni;   
     @NonNull
     @Column(unique = true, nullable = false)
-    private String userName;
+    private String username;
     @NonNull
     @Pattern(regexp = PASSWORD_PATTERN)
     private String password;    
@@ -47,7 +47,7 @@ public class User {
          name = "user_roles",
          joinColumns = @JoinColumn( name = "user_id" ),
          inverseJoinColumns = @JoinColumn( name= "role_id" ))
-    private Set<Role> roles = new HashSet<>();
+    private final Set<Role> roles = new HashSet<>();
     private String firstName;
     private String lastName;
     private String phone;

@@ -6,8 +6,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,19 +14,34 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private static final long serialVersionUID = 1L;
-    private Long id;
-    private String username;
-    private String email;
-    @JsonIgnore
-    private String password;
-    private Collection<? extends GrantedAuthority> authorities;
-    private Boolean isAccountNonExpired;
-    private Boolean isAccountNonLocked;
-    private Boolean isCredentialsNonExpired;
-    private Boolean isEnabled;
+	private static final long serialVersionUID = 1L;
+	private Long id;
+	private String username;
+	private String email;
+	@JsonIgnore
+	private String password;
+	private Collection<? extends GrantedAuthority> authorities;
+	private Boolean isAccountNonExpired;
+	private Boolean isAccountNonLocked;
+	private Boolean isCredentialsNonExpired;
+	private Boolean isEnabled;
 
-    public static UserDetailsImpl build(User user){
+	public UserDetailsImpl(Long id, String username,String email,String password,
+			Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired,
+			Boolean isEnabled, List<GrantedAuthority> authorities) {
+				this.id = id;
+				this.username = username;
+				this.email = email;
+				this.password = password;
+				this.isAccountNonExpired = isAccountNonExpired;
+				this.isAccountNonLocked = isAccountNonLocked;
+				this.isCredentialsNonExpired = isCredentialsNonExpired;
+				this.isEnabled = isEnabled;
+				this.authorities = authorities;
+
+	}
+
+	public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
             .map(role -> new SimpleGrantedAuthority(role.getName().name()))
             .collect(Collectors.toList());

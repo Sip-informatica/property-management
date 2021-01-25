@@ -9,7 +9,7 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
-    Optional<User> findByUserName(String userName);
-    Boolean existsByUserName(String userName);
+    Optional<User> findByUsername(String username);
+    Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);           
 }

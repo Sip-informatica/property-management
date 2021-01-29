@@ -6,14 +6,12 @@ import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import lombok.*;
 
-@Builder
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -24,16 +22,18 @@ public class User {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; 
-    @NonNull
+    private Long id;   
     @Column(unique = true)
-    private String dni;   
+    private String dni;
+    @NotBlank   
     @NonNull
     @Column(unique = true, nullable = false)
     private String username;
+    @NotBlank
     @NonNull
-    @Pattern(regexp = PASSWORD_PATTERN)
+    //@Pattern(regexp = PASSWORD_PATTERN)
     private String password;    
+    @NotBlank
     @NonNull
     @Email
     @Column(unique = true, nullable = false)
@@ -41,13 +41,13 @@ public class User {
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
-    private Boolean isEnabled;
+    private Boolean isEnabled;   
     @ManyToMany
     @JoinTable(
          name = "user_roles",
          joinColumns = @JoinColumn( name = "user_id" ),
          inverseJoinColumns = @JoinColumn( name= "role_id" ))
-    private final Set<Role> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
     private String firstName;
     private String lastName;
     private String phone;
@@ -56,4 +56,21 @@ public class User {
     private String country;
     private LocalDateTime firstAccess;
     private LocalDateTime lastAccess;
+
+    public User(){
+        
+    }
+    
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+
+        this.isAccountNonExpired = true;
+		this.isAccountNonLocked = true;
+		this.isCredentialsNonExpired = true;
+		this.isEnabled = true;       
+    }
+
+
 }

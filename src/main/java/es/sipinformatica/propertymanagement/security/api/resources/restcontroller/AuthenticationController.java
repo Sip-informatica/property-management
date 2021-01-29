@@ -1,11 +1,14 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.UserDetailsImpl;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.LoginRequest;
+import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
 import es.sipinformatica.propertymanagement.security.api.dtos.response.JwtResponse;
+import es.sipinformatica.propertymanagement.security.api.httpErrors.MessageResponse;
 import es.sipinformatica.propertymanagement.security.data.daos.RoleRepository;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
+import es.sipinformatica.propertymanagement.security.data.model.ERole;
+import es.sipinformatica.propertymanagement.security.data.model.Role;
+import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.services.JwtService;
 
 @RestController
@@ -38,7 +46,7 @@ public class AuthenticationController {
     @Autowired
     JwtService jwtService;
 
-@PostMapping("/sigin")
+@PostMapping("/signin")
 public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
     Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -60,5 +68,40 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
     
     return ResponseEntity.ok(jwtResponse);   
 
-}   
+}  
+
+@PostMapping("/signup")
+public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signupRequest){
+    if (userRepository.existsByUsername(signupRequest.getUsername())){
+        return ResponseEntity.badRequest()
+        .body(new MessageResponse("Error: " + signupRequest.getUsername() + " is already in use!"));
+    }
+    if (userRepository.existsByEmail(signupRequest.getEmail())){
+        return ResponseEntity.badRequest()
+        .body(new MessageResponse("Error: " + signupRequest.getEmail() + " is already in use!"));
+    }
+    
+    User user = new User(signupRequest.getUsername(),
+        signupRequest.getEmail(),
+        passwordEncoder.encode(signupRequest.getPassword()));
+    Set<String> signupRoles = signupRequest.getRole();
+    Set<Role> roles = new HashSet<>();
+
+    if (signupRoles == null) {
+        Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
+        .orElseThrow(()-> new RuntimeException("Error: Role is not found"));
+        roles.add(userRole);
+    } else {
+        //TODO Gestión de roles --> switch (role) { case admin"
+        Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
+        .orElseThrow(()-> new RuntimeException("Error: Role is not found"));
+        roles.add(userRole);       
+    }
+
+    user.setRoles(roles);
+    userRepository.save(user);    
+
+    return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+}
+
 }

@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/auth/signup HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "candi",
+    "email": "candi@sip.es",
+    "password": "123456"
+}
+###

@@ -1,6 +1,7 @@
 package es.sipinformatica.propertymanagement.security.domain.services;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +19,8 @@ import io.jsonwebtoken.*;
 @Service
 public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
+    private static final String ROLE_CLAIN = "role";
 
     @Value("${jwt.key}")
     private String jwtKey;
@@ -55,11 +59,16 @@ public class JwtService {
 
 	public String createJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        final String authorities = authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.joining(","));
+
         String jwtToken = Jwts.builder()
         .setSubject(userPrincipal.getUsername())
+        .claim(ROLE_CLAIN, authorities)
         .setIssuedAt(new Date())
         .setExpiration(new Date((new Date().getTime() + jwtExpiration)))
-        .signWith(SignatureAlgorithm.HS512, jwtKey)
+        .signWith(SignatureAlgorithm.HS512, jwtKey)        
         .compact();
         
 		return jwtToken;

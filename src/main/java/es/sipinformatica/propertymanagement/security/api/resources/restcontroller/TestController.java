@@ -12,9 +12,14 @@ public class TestController {
 	public String allAccess() {
 		return "Public Content.";
 	}
+	@GetMapping("/adminmanager")
+	@PreAuthorize("hasRole('MANAGER') or  hasRole('ADMIN')")
+	public String adminmanagerAccess() {
+		return "AdminManager Board.";
+	}
 	
 	@GetMapping("/authenticated")
-	@PreAuthorize("hasRole('MANAGER') or hasRole('OPERATOR') or hasRole('CUSTOMER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('MANAGER') or hasRole('OPERATOR') or hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('AUTHENTICATED ')")
 	public String userAccess() {
 		return "User authenticated Content.";
 	}

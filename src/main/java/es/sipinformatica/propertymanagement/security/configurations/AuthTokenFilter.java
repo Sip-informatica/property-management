@@ -7,9 +7,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import es.sipinformatica.propertymanagement.security.domain.services.JwtService;
 import es.sipinformatica.propertymanagement.security.domain.services.UserDetailsServiceImpl;
+import io.jsonwebtoken.JwtException;
 
 
 
@@ -32,6 +36,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+                String msg = "";
                 try {
                     String jwt = jwtService.parseJwt(request);
                     if (jwt !=null && jwtService.validateJwtToken(jwt)){
@@ -44,6 +49,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     }
                 } catch (Exception e) {
                     logger.error("Cannot set user authentication: {}", e);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    if (e instanceof JwtException) {
+                        msg = e.getMessage();
+                    }
+                    response.setCharacterEncoding("UTF-8");
+                    response.setContentType(MediaType.APPLICATION_JSON.getType());
+                    response.getWriter().write(objectMapper.writeValueAsString(msg));
+                    response.getWriter().flush();
+                    response.getWriter().close();
+                    return;
                 }
             filterChain.doFilter(request, response);                        
 

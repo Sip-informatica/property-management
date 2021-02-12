@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +30,8 @@ import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
+import es.sipinformatica.propertymanagement.security.domain.exceptions.ConflictException;
+import es.sipinformatica.propertymanagement.security.domain.exceptions.NotFoundException;
 import es.sipinformatica.propertymanagement.security.domain.services.JwtService;
 
 @RestController
@@ -73,12 +75,10 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
 @PostMapping("/signup")
 public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signupRequest){
     if (userRepository.existsByUsername(signupRequest.getUsername())){
-        return ResponseEntity.badRequest()
-        .body(new MessageResponse("Error: " + signupRequest.getUsername() + " is already in use!"));
+        throw new ConflictException("Error: " + signupRequest.getUsername() + " is already in use!");      
     }
     if (userRepository.existsByEmail(signupRequest.getEmail())){
-        return ResponseEntity.badRequest()
-        .body(new MessageResponse("Error: " + signupRequest.getEmail() + " is already in use!"));
+        throw new ConflictException("Error: " + signupRequest.getEmail() + " is already in use!");
     }
     
     User user = new User(signupRequest.getUsername(),
@@ -89,19 +89,19 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest sign
 
     if (signupRoles == null) {
         Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new RuntimeException("Error: Role is not found"));
+        .orElseThrow(()-> new NotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
         roles.add(userRole);
     } else {
         //TODO Gestión de roles --> switch (role) { case admin"
         Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new RuntimeException("Error: Role is not found"));
+        .orElseThrow(()-> new NotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
         roles.add(userRole);       
     }
 
     user.setRoles(roles);
     userRepository.save(user);    
 
-    return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+    return ResponseEntity.ok(new MessageResponse(user.getUsername() + "User registered successfully " + HttpStatus.CREATED ));
 }
 
 }

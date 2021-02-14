@@ -30,8 +30,8 @@ import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
-import es.sipinformatica.propertymanagement.security.domain.exceptions.ConflictException;
-import es.sipinformatica.propertymanagement.security.domain.exceptions.NotFoundException;
+import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
+import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
 import es.sipinformatica.propertymanagement.security.domain.services.JwtService;
 
 @RestController
@@ -75,10 +75,10 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
 @PostMapping("/signup")
 public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signupRequest){
     if (userRepository.existsByUsername(signupRequest.getUsername())){
-        throw new ConflictException("Error: " + signupRequest.getUsername() + " is already in use!");      
+        throw new ResourceConflictException("Error: " + signupRequest.getUsername() + " is already in use!");      
     }
     if (userRepository.existsByEmail(signupRequest.getEmail())){
-        throw new ConflictException("Error: " + signupRequest.getEmail() + " is already in use!");
+        throw new ResourceConflictException("Error: " + signupRequest.getEmail() + " is already in use!");
     }
     
     User user = new User(signupRequest.getUsername(),
@@ -89,12 +89,12 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest sign
 
     if (signupRoles == null) {
         Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new NotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
+        .orElseThrow(()-> new ResourceNotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
         roles.add(userRole);
     } else {
         //TODO Gestión de roles --> switch (role) { case admin"
         Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new NotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
+        .orElseThrow(()-> new ResourceNotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
         roles.add(userRole);       
     }
 

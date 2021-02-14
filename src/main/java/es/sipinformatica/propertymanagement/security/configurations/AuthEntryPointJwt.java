@@ -1,8 +1,9 @@
 package es.sipinformatica.propertymanagement.security.configurations;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +14,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+
+import es.sipinformatica.propertymanagement.security.api.httpErrors.ApiErrorMessage;
+import es.sipinformatica.propertymanagement.security.api.httpErrors.ResponseEntityBuilder;
 
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
@@ -26,18 +32,22 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         logger.error("Unauthorized error; {}", authException.getMessage());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                 
+        List<String> detailsError = new ArrayList<String>();
+        detailsError.add(authException.getMessage());
+        detailsError.add("You need to login first in order to perform this action.");
+        ApiErrorMessage error = new ApiErrorMessage(
+            LocalDateTime.now(),
+            HttpStatus.UNAUTHORIZED, 
+            "Unauthorized Exception - 401 ",
+            detailsError);
         
-        Map<String, String> rsp = new HashMap<>();
-        ObjectMapper objectMapper = new ObjectMapper();        
-        rsp.put("resp_code", HttpStatus.UNAUTHORIZED.value() + "");
-        rsp.put("resp_msg", authException.getMessage());
-
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(rsp));
-   		response.getWriter().flush();
-   		response.getWriter().close();        
-
+        final ResponseEntity<?> responseEntity =  ResponseEntityBuilder.build(error);
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getOutputStream(), responseEntity); 
+        
     }    
 
 }

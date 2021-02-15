@@ -44,9 +44,7 @@ public class ControllerTest {
     @WithMockUser(roles = "ADMIN")
     public void manager() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET, BASEURL + "manager"))        
-        .andExpect(status().isForbidden())
-        .andExpect(content().string(""));
-              
+        .andExpect(status().isForbidden());              
     }
     
 }

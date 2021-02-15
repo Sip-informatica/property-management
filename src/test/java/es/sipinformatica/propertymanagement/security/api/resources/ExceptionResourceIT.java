@@ -49,4 +49,13 @@ public class ExceptionResourceIT {
         .expectStatus()
         .isUnauthorized();        
     }
+    @Test
+    void testException(){
+        this.webTestClient
+        .get().uri(EXCEPTIONS + "/handleall")
+        .exchange()
+        .expectStatus()
+        .is5xxServerError();   
+    }
+       
 }

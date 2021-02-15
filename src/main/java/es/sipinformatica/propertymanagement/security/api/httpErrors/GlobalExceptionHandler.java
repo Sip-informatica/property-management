@@ -276,11 +276,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         WebRequest request) {
 		
 		List<String> detailsError = new ArrayList<String>();
-		detailsError.add(ex.getLocalizedMessage());
-		
+        detailsError.add("The error must be corrected"); 
+		detailsError.add(ex.getLocalizedMessage()); 
+        detailsError.add(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());        
+
 		ApiErrorMessage err = new ApiErrorMessage(
             LocalDateTime.now(),
-            HttpStatus.BAD_REQUEST, 
+            HttpStatus.INTERNAL_SERVER_ERROR, 
             "Error occurred",
             detailsError);
 		

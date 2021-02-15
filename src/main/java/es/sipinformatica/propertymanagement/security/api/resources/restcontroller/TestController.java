@@ -63,4 +63,9 @@ public class TestController {
 		}
 	}
 	
+	@GetMapping(EXCEPTIONS + "/handleall" )
+	public void handleAll() throws Exception {		
+			throw new Exception();			
+	}
+	
 }

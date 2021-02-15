@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,14 +19,18 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class ControllerTest {
-    public static final String BASEURL = "http://localhost:8080/api/test/";
+    
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Test
     @WithMockUser(roles = "MANAGER")
     public void allAccessTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET, BASEURL + "all"))        
+        this.mockMvc.perform(MockMvcRequestBuilders.request(
+            HttpMethod.GET, 
+            this.restTemplate.getRootUri() + "api/test/all"))        
         .andExpect(status().isOk())
         .andExpect(content().string("Public Content."));
               
@@ -34,7 +39,9 @@ public class ControllerTest {
     @Test
     @WithMockUser(username = "manager", password = "pass", roles = {"MANAGER" , "ADMIN"})
     public void adminmanager() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET, BASEURL + "adminmanager"))        
+        mockMvc.perform(MockMvcRequestBuilders.request(
+            HttpMethod.GET, 
+            this.restTemplate.getRootUri() + "api/test/adminmanager"))        
         .andExpect(status().isOk())
         .andExpect(content().string("AdminManager Board."));
               
@@ -43,7 +50,9 @@ public class ControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void manager() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET, BASEURL + "manager"))        
+        mockMvc.perform(MockMvcRequestBuilders.request(
+            HttpMethod.GET, 
+            this.restTemplate.getRootUri() + "api/test/manager"))        
         .andExpect(status().isForbidden());              
     }
     

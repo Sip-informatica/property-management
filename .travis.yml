@@ -10,7 +10,7 @@ notifications:
     recipients:
       - open.hardware.libre@gmail.com
 install:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
   - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=sip-informatica -Dsonar.login=$SONAR
 deploy:

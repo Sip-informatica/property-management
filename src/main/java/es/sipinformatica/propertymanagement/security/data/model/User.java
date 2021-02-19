@@ -1,0 +1,76 @@
+package es.sipinformatica.propertymanagement.security.data.model;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+import lombok.*;
+
+@Data
+@Entity
+@Table(name = "users")
+public class User {
+    // digit + lowercase char + uppercase char + punctuation + symbol
+    @Transient 
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;   
+    @Column(unique = true)
+    private String dni;
+    @NotBlank   
+    @NonNull
+    @Column(unique = true, nullable = false)
+    private String username;
+    @NotBlank
+    @NonNull
+    //@Pattern(regexp = PASSWORD_PATTERN)
+    private String password;    
+    @NotBlank
+    @NonNull
+    @Email
+    @Column(unique = true, nullable = false)
+    private String email;     
+    private Boolean isAccountNonExpired;
+    private Boolean isAccountNonLocked;
+    private Boolean isCredentialsNonExpired;
+    private Boolean isEnabled;   
+    @ManyToMany
+    @JoinTable(
+         name = "user_roles",
+         joinColumns = @JoinColumn( name = "user_id" ),
+         inverseJoinColumns = @JoinColumn( name= "role_id" ))
+    private Set<Role> roles = new HashSet<>();
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private String address;
+    private String city;
+    private String country;
+    private LocalDateTime firstAccess;
+    private LocalDateTime lastAccess;
+
+    public User(){
+        
+    }
+    
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+
+        this.isAccountNonExpired = true;
+		this.isAccountNonLocked = true;
+		this.isCredentialsNonExpired = true;
+		this.isEnabled = true;       
+    }
+
+
+}

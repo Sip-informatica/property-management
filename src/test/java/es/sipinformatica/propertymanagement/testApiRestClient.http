@@ -1,0 +1,79 @@
+POST http://localhost:8080/api/auth/signup HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "AdminManager",
+    "email": "adminmanager@sip.es",
+    "password": "passAdminManager",
+    "role": ["admin","manager"]
+}
+###
+POST http://localhost:8080/api/auth/signup HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "manager",
+    "email": "manager@sip.es",
+    "password": "passManager",
+    "role": ["manager"]
+}
+###
+POST http://localhost:8080/api/auth/signup HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "admin",
+    "email": "admin@sip.es",
+    "password": "passAdmin",
+    "role": ["admin"]
+}
+###
+GET http://localhost:8080/api/test/all HTTP/1.1
+###
+GET http://localhost:8080/api/test/exception/handleall HTTP/1.1
+###
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "admin",   
+    "password": "passAdmin"    
+}
+###
+GET http://localhost:8080/api/test/admin HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjEyMzUwNDczLCJleHAiOjE2MTI0MzY4NzN9.yGmt6SxVo2E13kbeW1UZrabYgMeIdHIiUSaL64aXG2uYpqvoA4Q-Uxol-1b7DSRJHyyfF_GH8mDIMGVdlSYFUw
+###
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "manager",   
+    "password": "passManager"    
+}
+###
+GET http://localhost:8080/api/test/manager HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
+###
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "AdminManager",   
+    "password": "passAdminManager"    
+}
+###
+GET http://localhost:8080/api/test/adminmanager HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTMxMzY3OTQsImV4cCI6MTYxMzIyMzE5NH0.j4IjO56bf_AIGlBrCXfc9I_maGM61CoIUmfLzmSyj_udtxEjyK9wDmxtKLpfzC8whgSQjzyWqisondz6-KKfwA
+
+###
+###
+GET http://localhost:8080/api/test/operator HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
+###
+GET http://localhost:8080/api/test/authenticated HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew

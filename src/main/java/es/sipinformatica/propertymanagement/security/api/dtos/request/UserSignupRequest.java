@@ -14,16 +14,16 @@ public class UserSignupRequest {
     @NonNull
     @NotBlank
     @Size(min = 3, max = 20)    
-    public String username;
+    private String username;
     @NotBlank
     @NonNull
     @Size(max = 50)
     @Email
-    public String email;
+    private String email;
     @NonNull
     @NotBlank
     @Size(min = 6, max = 40)    
-    public String password;
-	public Set<String> role;	
+    private String password;
+	private Set<String> role;	
 
 }

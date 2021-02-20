@@ -1,4 +1,4 @@
-package es.sipinformatica.propertymanagement.security.api.httpErrors;
+package es.sipinformatica.propertymanagement.security.api.httperrors;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

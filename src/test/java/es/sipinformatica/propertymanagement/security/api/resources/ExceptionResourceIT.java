@@ -8,7 +8,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ExceptionResourceIT {
+class ExceptionResourceIT {
     public static final String EXCEPTIONS = "api/test/exception";
 	public static final String ID_ID = "/{id}";
     public static final String API_TEST = "/api/test";
@@ -31,7 +31,7 @@ public class ExceptionResourceIT {
         .get().uri(EXCEPTIONS + ID_ID, 9)
         .exchange()
         .expectStatus()
-        .isBadRequest();        
+        .is5xxServerError();        
     }
     @Test
     void testForbiddenException(){

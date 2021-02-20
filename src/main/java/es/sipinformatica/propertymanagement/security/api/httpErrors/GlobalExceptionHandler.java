@@ -1,4 +1,4 @@
-package es.sipinformatica.propertymanagement.security.api.httpErrors;
+package es.sipinformatica.propertymanagement.security.api.httperrors;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
 		
-		List<String> detailsError = new ArrayList<String>();		
+		List<String> detailsError = new ArrayList<>();		
         StringBuilder builder = new StringBuilder();
 
         builder.append(ex.getContentType());
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status, 
         WebRequest request) {
         
-		List<String> detailsError = new ArrayList<String>();
+		List<String> detailsError = new ArrayList<>();
         detailsError.add(ex.getMessage());
         
         ApiErrorMessage err = new ApiErrorMessage(
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status, 
         WebRequest request) {
 		
-		List<String> detailsError = new ArrayList<String>();
+		List<String> detailsError = new ArrayList<>();
 		detailsError = ex.getBindingResult()
 				 .getFieldErrors()
 				.stream()
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status, 
             WebRequest request) {
 		
-		List<String> detailsError = new ArrayList<String>();
+		List<String> detailsError = new ArrayList<>();
 		detailsError.add(ex.getParameterName() + " parameter is missing");
 
 		ApiErrorMessage err = new ApiErrorMessage(
@@ -126,7 +126,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     (MethodArgumentTypeMismatchException ex,
             WebRequest request) {
 
-        List<String> detailsError = new ArrayList<String>();
+        List<String> detailsError = new ArrayList<>();
 		detailsError.add(ex.getMessage());
       
 		ApiErrorMessage err = new ApiErrorMessage(
@@ -140,11 +140,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	// Triggers when @Validated fails
 	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<?> handleConstraintViolationException(
+	public ResponseEntity<Object> handleConstraintViolationException(
         Exception ex, 
         WebRequest request) {
 		
-		List<String> detailsError = new ArrayList<String>();
+		List<String> detailsError = new ArrayList<>();
 		detailsError.add(ex.getMessage());
 		
 		ApiErrorMessage err = new ApiErrorMessage(
@@ -161,7 +161,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleResourceNotFoundException(
         ResourceNotFoundException ex) {
 
-        List<String> detailsError = new ArrayList<String>();
+        List<String> detailsError = new ArrayList<>();
         detailsError.add(ex.getMessage());
         ApiErrorMessage error = new ApiErrorMessage(
             LocalDateTime.now(),
@@ -177,7 +177,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      public ResponseEntity<Object> handleResourceConflictException(
         ResourceConflictException ex) {
  
-         List<String> detailsError = new ArrayList<String>();
+         List<String> detailsError = new ArrayList<>();
          detailsError.add(ex.getMessage());
          ApiErrorMessage error = new ApiErrorMessage(
              LocalDateTime.now(),
@@ -195,7 +195,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      public ResponseEntity<Object> handleResourceAccessDeniedException(
         Exception ex, WebRequest request) {
  
-         List<String> detailsError = new ArrayList<String>();
+         List<String> detailsError = new ArrayList<>();
          detailsError.add(ex.getMessage());
          detailsError.add("You don't have required role to perform this action.");
          ApiErrorMessage error = new ApiErrorMessage(
@@ -213,7 +213,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       public ResponseEntity<Object> handleResourceBadRequestException(
         ResourceBadRequestException ex) {
  
-         List<String> detailsError = new ArrayList<String>();
+         List<String> detailsError = new ArrayList<>();
          detailsError.add(ex.getMessage());
          ApiErrorMessage error = new ApiErrorMessage(
              LocalDateTime.now(),
@@ -232,7 +232,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status, 
             WebRequest request) {
 
-        List<String> detailsError = new ArrayList<String>();
+        List<String> detailsError = new ArrayList<>();
 		detailsError.add(String.format("Could not find the %s method for URL %s", 
         ex.getHttpMethod(), 
         ex.getRequestURL()));
@@ -255,7 +255,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status, 
             WebRequest request) {
 
-        List<String> detailsError = new ArrayList<String>();
+        List<String> detailsError = new ArrayList<>();
 		detailsError.add(String.format("Supported the %s method ", 
         (Object[])ex.getSupportedMethods()
         ));
@@ -275,7 +275,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Exception ex, 
         WebRequest request) {
 		
-		List<String> detailsError = new ArrayList<String>();
+		List<String> detailsError = new ArrayList<>();
         detailsError.add("The error must be corrected"); 
 		detailsError.add(ex.getLocalizedMessage()); 
         detailsError.add(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());        

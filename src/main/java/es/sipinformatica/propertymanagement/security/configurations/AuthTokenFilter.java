@@ -26,7 +26,7 @@ import io.jsonwebtoken.JwtException;
 
 
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
     
     @Autowired    
     private JwtService jwtService;
@@ -48,7 +48,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 } catch (Exception e) {
-                    logger.error("Cannot set user authentication: {}", e);
+                    LOGGER.error("Cannot set user authentication: {}", e.getMessage());
                     ObjectMapper objectMapper = new ObjectMapper();
                     if (e instanceof JwtException) {
                         msg = e.getMessage();

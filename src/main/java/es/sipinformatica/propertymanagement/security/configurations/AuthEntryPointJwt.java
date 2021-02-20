@@ -20,8 +20,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import es.sipinformatica.propertymanagement.security.api.httpErrors.ApiErrorMessage;
-import es.sipinformatica.propertymanagement.security.api.httpErrors.ResponseEntityBuilder;
+import es.sipinformatica.propertymanagement.security.api.httperrors.ApiErrorMessage;
+import es.sipinformatica.propertymanagement.security.api.httperrors.ResponseEntityBuilder;
 
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
@@ -35,7 +35,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                  
-        List<String> detailsError = new ArrayList<String>();
+        List<String> detailsError = new ArrayList<>();
         detailsError.add(authException.getMessage());
         detailsError.add("You need to login first in order to perform this action.");
         ApiErrorMessage error = new ApiErrorMessage(

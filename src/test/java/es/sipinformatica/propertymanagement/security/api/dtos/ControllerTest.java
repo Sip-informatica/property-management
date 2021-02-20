@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class ControllerTest {
+class ControllerTest {
     
     @Autowired
     private MockMvc mockMvc;
@@ -27,7 +27,7 @@ public class ControllerTest {
 
     @Test
     @WithMockUser(roles = "MANAGER")
-    public void allAccessTest() throws Exception {
+    void allAccessTest() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.request(
             HttpMethod.GET, 
             this.restTemplate.getRootUri() + "api/test/all"))        
@@ -38,7 +38,7 @@ public class ControllerTest {
 
     @Test
     @WithMockUser(username = "manager", password = "pass", roles = {"MANAGER" , "ADMIN"})
-    public void adminmanager() throws Exception {
+    void adminmanager() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(
             HttpMethod.GET, 
             this.restTemplate.getRootUri() + "api/test/adminmanager"))        
@@ -49,7 +49,7 @@ public class ControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void manager() throws Exception {
+    void manager() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(
             HttpMethod.GET, 
             this.restTemplate.getRootUri() + "api/test/manager"))        

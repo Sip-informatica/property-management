@@ -12,12 +12,12 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class RoleRepositoryIT {
+class RoleRepositoryIT {
     @Autowired
     RoleRepository roleRepository;
 
     @Test
-    public void shouldFindByName(){
+    void shouldFindByName(){
         assertTrue(roleRepository.findByName(ERole.ROLE_ADMIN).isPresent());
 
     }

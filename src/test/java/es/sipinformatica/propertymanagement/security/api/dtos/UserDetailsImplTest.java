@@ -21,7 +21,7 @@ import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 
 
-public class UserDetailsImplTest {
+class UserDetailsImplTest {
     private final User user = new User(); 
     Set<Role> roles = new HashSet<>();
     Role roleAdmin = new Role();
@@ -30,7 +30,7 @@ public class UserDetailsImplTest {
     
 
     @BeforeEach
-	public void initData() {      
+	void initData() {      
        
         roleAdmin.setName(ERole.ROLE_ADMIN);    
         roleManager.setName(ERole.ROLE_MANAGER);    
@@ -49,7 +49,7 @@ public class UserDetailsImplTest {
     }
     
     @Test
-    public void  rolesOfUser() {
+    void  rolesOfUser() {
                  
         assertNotNull(user);         
         assertTrue(user.getRoles().contains(roleAdmin));
@@ -58,7 +58,7 @@ public class UserDetailsImplTest {
 
     }
     @Test
-	public void buildUserDetailsShouldConvertFromUser() {
+	void buildUserDetailsShouldConvertFromUser() {
         List<String> expectedAuthorities = Arrays.asList("ROLE_ADMIN", "ROLE_MANAGER");
         UserDetails userDetails = UserDetailsImpl.build(user);
         final List<String> userAuthorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)

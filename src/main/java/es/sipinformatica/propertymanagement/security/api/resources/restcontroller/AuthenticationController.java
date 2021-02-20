@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import es.sipinformatica.propertymanagement.security.api.dtos.UserDetailsImpl;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.LoginRequest;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
 import es.sipinformatica.propertymanagement.security.api.dtos.response.JwtResponse;
-import es.sipinformatica.propertymanagement.security.api.httpErrors.MessageResponse;
+import es.sipinformatica.propertymanagement.security.api.httperrors.MessageResponse;
 import es.sipinformatica.propertymanagement.security.data.daos.RoleRepository;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
@@ -48,8 +49,10 @@ public class AuthenticationController {
     @Autowired
     JwtService jwtService;
 
+    private static final String ERROR = "Error: ";
+
 @PostMapping("/signin")
-public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
     Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
     
@@ -58,7 +61,7 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
     String jwtToken = jwtService.createJwtToken(authentication);
     List<String> roles = userDetails.getAuthorities().stream()
-        .map(item -> item.getAuthority())
+        .map(GrantedAuthority::getAuthority)
         .collect(Collectors.toList());
     
     JwtResponse jwtResponse = new JwtResponse(
@@ -73,12 +76,15 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
 }  
 
 @PostMapping("/signup")
-public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signupRequest){
-    if (userRepository.existsByUsername(signupRequest.getUsername())){
-        throw new ResourceConflictException("Error: " + signupRequest.getUsername() + " is already in use!");      
+public ResponseEntity<Object> registerUser(@Valid @RequestBody UserSignupRequest signupRequest){
+    Boolean existsByUsername = userRepository.existsByUsername(signupRequest.getUsername());
+    Boolean existsByEmail = userRepository.existsByEmail(signupRequest.getEmail());
+
+    if (Boolean.TRUE.equals(existsByUsername)){
+        throw new ResourceConflictException(ERROR + signupRequest.getUsername() + " is already in use!");      
     }
-    if (userRepository.existsByEmail(signupRequest.getEmail())){
-        throw new ResourceConflictException("Error: " + signupRequest.getEmail() + " is already in use!");
+    if (Boolean.TRUE.equals(existsByEmail)){
+        throw new ResourceConflictException(ERROR + signupRequest.getEmail() + " is already in use!");
     }
     
     User user = new User(signupRequest.getUsername(),
@@ -89,12 +95,12 @@ public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest sign
 
     if (signupRoles == null) {
         Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new ResourceNotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
+        .orElseThrow(()-> new ResourceNotFoundException(ERROR + ERole.ROLE_MANAGER.name() + " Role is not found"));
         roles.add(userRole);
     } else {
         //TODO Gestión de roles --> switch (role) { case admin"
         Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new ResourceNotFoundException("Error: " + ERole.ROLE_MANAGER.name() + " Role is not found"));
+        .orElseThrow(()-> new ResourceNotFoundException(ERROR + ERole.ROLE_MANAGER.name() + " Role is not found"));
         roles.add(userRole);       
     }
 

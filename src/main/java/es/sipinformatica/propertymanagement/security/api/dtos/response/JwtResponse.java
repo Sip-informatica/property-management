@@ -10,7 +10,7 @@ import lombok.Data;
 public class JwtResponse {
 
     private String token;   
-    private final String type = "Bearer";
+    private static final String type = "Bearer";
     private Long id;
     private String username;
     private String email;

@@ -21,14 +21,14 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class UserRepositoryIT {
+class UserRepositoryIT {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
 
     @Test
-    public void shouldGetUserByUsername() {
+    void shouldGetUserByUsername() {
         Optional<User> retrieveUserAdminManager = userRepository.findByUsername("adminManager");
         Optional<User> notRetrieveUserAdmin_Manager = userRepository.findByUsername("admin-Manager");
         
@@ -38,7 +38,7 @@ public class UserRepositoryIT {
     }
 
     @Test    
-    public void shouldSaveUserWithAssociatedRoles(){           
+    void shouldSaveUserWithAssociatedRoles(){           
         
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByName(ERole.ROLE_OPERATOR).get());

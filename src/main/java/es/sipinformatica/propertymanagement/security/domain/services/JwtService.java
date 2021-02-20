@@ -63,14 +63,13 @@ public class JwtService {
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.joining(","));
 
-        String jwtToken = Jwts.builder()
+        return Jwts.builder()
         .setSubject(userPrincipal.getUsername())
         .claim(ROLE_CLAIN, authorities)
         .setIssuedAt(new Date())
         .setExpiration(new Date((new Date().getTime() + jwtExpiration)))
         .signWith(SignatureAlgorithm.HS512, jwtKey)        
-        .compact();
-        
-		return jwtToken;
+        .compact();        
+		
 	}
 }

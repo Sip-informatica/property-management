@@ -1,4 +1,4 @@
-package es.sipinformatica.propertymanagement.security.api.httperrors;
+package es.sipinformatica.propertymanagement.security.api.httpserrors;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -84,11 +84,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status, 
         WebRequest request) {
 		
-		List<String> detailsError = new ArrayList<>();
-		detailsError = ex.getBindingResult()
-				 .getFieldErrors()
+		List<String> detailsError = ex
+                .getBindingResult()
+				.getFieldErrors()
 				.stream()
-				.map(error -> error.getObjectName()+ " : " + error.getDefaultMessage())
+				.map(error -> error.getObjectName() + " : " + error.getDefaultMessage())
 				.collect(Collectors.toList());
 		
 		ApiErrorMessage err = new ApiErrorMessage(

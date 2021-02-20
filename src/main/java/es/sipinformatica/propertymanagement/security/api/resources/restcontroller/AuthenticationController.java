@@ -25,7 +25,7 @@ import es.sipinformatica.propertymanagement.security.api.dtos.UserDetailsImpl;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.LoginRequest;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
 import es.sipinformatica.propertymanagement.security.api.dtos.response.JwtResponse;
-import es.sipinformatica.propertymanagement.security.api.httperrors.MessageResponse;
+import es.sipinformatica.propertymanagement.security.api.httpserrors.MessageResponse;
 import es.sipinformatica.propertymanagement.security.data.daos.RoleRepository;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;

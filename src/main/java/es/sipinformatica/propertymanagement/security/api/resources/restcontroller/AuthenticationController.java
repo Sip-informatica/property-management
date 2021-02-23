@@ -90,24 +90,19 @@ public ResponseEntity<Object> registerUser(@Valid @RequestBody UserSignupRequest
     User user = new User(signupRequest.getUsername(),
         signupRequest.getEmail(),
         passwordEncoder.encode(signupRequest.getPassword()));
-    Set<String> signupRoles = signupRequest.getRole();
-    Set<Role> roles = new HashSet<>();
-
-    if (signupRoles == null) {
-        Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
+    
+    Set<Role> roles = new HashSet<>();    
+    Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
         .orElseThrow(()-> new ResourceNotFoundException(ERROR + ERole.ROLE_MANAGER.name() + " Role is not found"));
-        roles.add(userRole);
-    } else {
-        //TODO Gestión de roles --> switch (role) { case admin"
-        Role userRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-        .orElseThrow(()-> new ResourceNotFoundException(ERROR + ERole.ROLE_MANAGER.name() + " Role is not found"));
-        roles.add(userRole);       
-    }
-
+    roles.add(userRole);  
+   
     user.setRoles(roles);
     userRepository.save(user);    
 
-    return ResponseEntity.ok(new MessageResponse(user.getUsername() + "User registered successfully " + HttpStatus.CREATED ));
+    return ResponseEntity.ok(new MessageResponse(user.getUsername() 
+    + " User registered successfully, Role: " 
+    + user.getRoles().stream().map(Role::getName).collect(Collectors.toList())
+    + " " + HttpStatus.CREATED ));
 }
 
 }

@@ -1,4 +1,4 @@
-package es.sipinformatica.propertymanagement.security.services;
+package es.sipinformatica.propertymanagement.security.domain.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
-import es.sipinformatica.propertymanagement.security.domain.services.JwtService;
 
 @Service
 public class RestClientTestService {

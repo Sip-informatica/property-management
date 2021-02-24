@@ -1,5 +1,6 @@
-package es.sipinformatica.propertymanagement.security.services;
+package es.sipinformatica.propertymanagement.security.domain.services;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,7 +23,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StringUtils;
 
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
-import es.sipinformatica.propertymanagement.security.domain.services.JwtService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,7 +35,7 @@ class JwtServiceTest {
     AuthenticationManager authenticationManager;
 
     private String jwtToken;
-
+    
     @BeforeEach
     private void createJwtToken() {
         List<GrantedAuthority> roles = new ArrayList<>();
@@ -67,7 +67,8 @@ class JwtServiceTest {
         assertFalse(jwtService.validateJwtToken(jwtToken + "False"));
         assertTrue(jwtToken.contains("."));
         assertEquals(20, jwtToken.indexOf("."));  
-        assertEquals(2, StringUtils.countOccurrencesOf(jwtToken, "."));     
+        assertEquals(2, StringUtils.countOccurrencesOf(jwtToken, ".")); 
+        assertDoesNotThrow(() -> {jwtService.validateJwtToken("jwtMalformed");});
     }
     
 }

@@ -56,6 +56,17 @@ class AuthenticationControllerIT {
         User userTest = userRepository.findByUsername("username").orElseThrow();
         userRepository.delete(userTest);
     }
+    @Test
+    void shouldRegisterUserConflict() {
+        userSignupRequest = new UserSignupRequest("AdminManager", "adminmanager@sip.es", "password");
+
+        this.webTestClient.post()
+        .uri(API + SIGNUP)
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(userSignupRequest)
+        .exchange().expectStatus().is4xxClientError()
+        .expectBody().jsonPath("message", "Conflict Exception ");        
+    }
 
         
 }

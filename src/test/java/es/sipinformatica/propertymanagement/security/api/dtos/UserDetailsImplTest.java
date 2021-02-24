@@ -69,8 +69,9 @@ class UserDetailsImplTest {
         assertEquals(userDetails.getPassword(), user.getPassword());
         assertTrue(userDetails.getAuthorities().stream().findAny().isPresent());
         assertTrue(userAuthorities.containsAll(expectedAuthorities));
-
-        
+        assertEquals("adminmanager@sip.es", user.getEmail());
+        assertEquals(1L, user.getId());   
+        assertNotNull(user.hashCode());         
 
     }
 }

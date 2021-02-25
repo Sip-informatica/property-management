@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,9 @@ class JwtServiceTest {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    private  MockHttpServletRequest request;   
     private String jwtToken;
+    private static final String  TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjE0MjUxMjUxLCJleHAiOjE2MTQzMzc2NTF9.qesgejQAc0Z_g_F3ANyOnMRTicBPmabAqOjWb5INObwXqBmrCSbmqORzRBWqi0x1wUsVuGBAZsWmj2El3cShEQ";
     
     @BeforeEach
     private void createJwtToken() {
@@ -47,6 +50,9 @@ class JwtServiceTest {
 
         jwtToken = jwtService.createJwtToken(authentication);
         log.info("Token: " + jwtToken);
+
+        request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer" + TOKEN);       
 
     }
 
@@ -69,6 +75,12 @@ class JwtServiceTest {
         assertEquals(20, jwtToken.indexOf("."));  
         assertEquals(2, StringUtils.countOccurrencesOf(jwtToken, ".")); 
         assertDoesNotThrow(() -> {jwtService.validateJwtToken("jwtMalformed");});
+        assertDoesNotThrow(() -> {jwtService.validateJwtToken("");});  
+        assertDoesNotThrow(() -> {jwtService.validateJwtToken(TOKEN);});            
+    }
+    @Test
+    void shouldParseJwt() { 
+        assertDoesNotThrow(() -> {jwtService.parseJwt(request);});
     }
     
 }

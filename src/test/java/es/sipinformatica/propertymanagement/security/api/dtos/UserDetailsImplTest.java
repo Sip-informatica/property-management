@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
@@ -60,7 +59,7 @@ class UserDetailsImplTest {
     @Test
 	void buildUserDetailsShouldConvertFromUser() {
         List<String> expectedAuthorities = Arrays.asList("ROLE_ADMIN", "ROLE_MANAGER");
-        UserDetails userDetails = UserDetailsImpl.build(user);
+        UserDetailsImpl userDetails = UserDetailsImpl.build(user);
         final List<String> userAuthorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 
@@ -69,9 +68,9 @@ class UserDetailsImplTest {
         assertEquals(userDetails.getPassword(), user.getPassword());
         assertTrue(userDetails.getAuthorities().stream().findAny().isPresent());
         assertTrue(userAuthorities.containsAll(expectedAuthorities));
-        assertEquals("adminmanager@sip.es", user.getEmail());
-        assertEquals(1L, user.getId());   
-        assertNotNull(user.hashCode());         
+        assertEquals(userDetails.getEmail(), user.getEmail());
+        assertEquals(userDetails.getId(), user.getId());   
+        assertNotNull(userDetails.hashCode());         
 
     }
 }

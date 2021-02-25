@@ -12,7 +12,9 @@ notifications:
 install:
   - mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
-  - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=sip-informatica -Dsonar.login=$SONAR -Dsonar.coverage.exclusions=**/GlobalExceptionHandler.java
+  - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=sip-informatica -D
+  sonar.login=$SONAR -D
+  sonar.coverage.exclusions=**/GlobalExceptionHandler.java, **/AuthenticationController.java
 deploy:
   provider: heroku
   api_key: $HEROKU  

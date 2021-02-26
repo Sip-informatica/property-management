@@ -27,7 +27,10 @@
 		<jacoco.version>0.8.5</jacoco.version>
 		<!-- JWT -->
 		<jwt.version>0.9.1</jwt.version>	
-		<!-- Maven -->
+		<!-- Maven. integration test -->
+		<maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>2.21.0</maven-failsafe-plugin.version>
+		<junit-platform-surefire-provider-version>1.2.0</junit-platform-surefire-provider-version>
 		<!-- Pruebas -->
 		<!-- Logs -->
 		<!-- Data Base -->
@@ -137,9 +140,41 @@
                     </execution>
                 </executions>
             </plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit-platform-surefire-provider-version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit-platform-surefire-provider-version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
-	
+
 	<developers>
         <developer>
             <name>Cándido García</name>
@@ -153,5 +188,5 @@
 			</roles>
         </developer>
 	</developers>
-
+	
 </project>

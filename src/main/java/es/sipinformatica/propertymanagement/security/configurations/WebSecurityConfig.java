@@ -51,8 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://sip-property-management.herokuapp.com"));
         corsConfiguration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         corsConfiguration.setMaxAge((long) 3600);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

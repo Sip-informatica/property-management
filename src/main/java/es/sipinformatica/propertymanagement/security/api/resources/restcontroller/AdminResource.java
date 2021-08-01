@@ -13,12 +13,12 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.domain.services.AdminService;
 
 @RestController
-@RequestMapping("/api/auth"+AdminResource.ADMIN)
+@RequestMapping("/api/auth" + AdminResource.ADMIN)
 public class AdminResource {
     public static final String ADMIN = "/users-admin";
     public static final String MOBILE_ID = "/phone/{mobile}";
     public static final String EMAIL = "/email/{email}";
-    public static final String DNI = "/dni/{dni}";    
+    public static final String DNI = "/dni/{dni}";
     public static final String ROLE = "/role/{role}";
 
     private AdminService adminService;
@@ -28,8 +28,8 @@ public class AdminResource {
         this.adminService = adminService;
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping    
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
     public Stream<UserDto> readAll() {
         return this.adminService.readAll().map(UserDto::ofUser);
     }
@@ -66,7 +66,7 @@ public class AdminResource {
         this.adminService.updateByEmail(email, updateUserDto.toUser());
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(EMAIL)
     public UserDto readUserByEmail(@PathVariable String email) {
 

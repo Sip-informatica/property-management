@@ -51,13 +51,13 @@ public class AdminService {
     }
 
     private void checkMobile(String mobile) {
-        if (this.userRepository.existsByPhone(mobile)) {
+        if (Boolean.TRUE.equals(this.userRepository.existsByPhone(mobile))) {
             throw new ResourceConflictException("The mobile already exists: " + mobile);
         }
     }
 
     private void checkEmail(String email) {
-        if (this.userRepository.existsByEmail(email)) {
+        if (Boolean.TRUE.equals(this.userRepository.existsByEmail(email))) {
             throw new ResourceConflictException("The email already exists: " + email);
         }
     }

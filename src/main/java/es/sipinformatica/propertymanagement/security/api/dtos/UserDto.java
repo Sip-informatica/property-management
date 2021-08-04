@@ -49,8 +49,10 @@ public class UserDto {
     private Set<String> roles;
 
     public UserDto(User user) {
+        String SECRET = "secret";
         BeanUtils.copyProperties(user, this);
-        this.password = "secret";
+        
+        this.password = SECRET;
         this.roles = user.getRoles().stream().map(Role::getName).map(ERole::name).collect(Collectors.toSet());
         
     }
@@ -72,9 +74,8 @@ public class UserDto {
         if (Objects.isNull(password)) {
             password = UUID.randomUUID().toString();
         }
-        if (Objects.isNull(roles)) {
-            this.roles.stream().map(role -> new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name())).collect(Collectors.toSet());
-
+        if (Objects.isNull(roles)) {           
+            this.roles.add(ERole.ROLE_MANAGER.name());
         }
         if (Objects.isNull(isEnabled)) {
             this.isEnabled = true;

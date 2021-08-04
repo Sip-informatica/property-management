@@ -66,7 +66,16 @@ content-Type: application/json
 ###
 GET http://localhost:8080/api/test/adminmanager HTTP/1.1
 Content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTMxMzY3OTQsImV4cCI6MTYxMzIyMzE5NH0.j4IjO56bf_AIGlBrCXfc9I_maGM61CoIUmfLzmSyj_udtxEjyK9wDmxtKLpfzC8whgSQjzyWqisondz6-KKfwA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9BRE1JTixST0xFX01BTkFHRVIiLCJpYXQiOjE2Mjc4NDc5OTIsImV4cCI6MTYyNzkzNDM5Mn0.G8vMWPokTU8qI642fcVM7YO-Rpm2WRcTyyQKX7Jve78eVUWTo7f3fh3yfCBc1UiOceZBw4QmFU_7arlGaHM-Bg
+
+###
+GET http://localhost:8080/api/auth/users-admin HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9BRE1JTixST0xFX01BTkFHRVIiLCJpYXQiOjE2Mjc4NDc5OTIsImV4cCI6MTYyNzkzNDM5Mn0.G8vMWPokTU8qI642fcVM7YO-Rpm2WRcTyyQKX7Jve78eVUWTo7f3fh3yfCBc1UiOceZBw4QmFU_7arlGaHM-Bg
+###
+DELETE  http://localhost:8080/api/auth/users-admin/email/v@v.es HTTP/1.1
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9BRE1JTixST0xFX01BTkFHRVIiLCJpYXQiOjE2Mjc4NDc5OTIsImV4cCI6MTYyNzkzNDM5Mn0.G8vMWPokTU8qI642fcVM7YO-Rpm2WRcTyyQKX7Jve78eVUWTo7f3fh3yfCBc1UiOceZBw4QmFU_7arlGaHM-Bg
 
 ###
 ###

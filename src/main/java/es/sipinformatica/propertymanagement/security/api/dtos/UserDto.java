@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
@@ -49,10 +48,10 @@ public class UserDto {
     private Set<String> roles;
 
     public UserDto(User user) {
-        String SECRET = "secret";
+        String secret = "secret";
         BeanUtils.copyProperties(user, this);
         
-        this.password = SECRET;
+        this.password = secret;
         this.roles = user.getRoles().stream().map(Role::getName).map(ERole::name).collect(Collectors.toSet());
         
     }
@@ -74,7 +73,8 @@ public class UserDto {
         if (Objects.isNull(password)) {
             password = UUID.randomUUID().toString();
         }
-        if (Objects.isNull(roles)) {           
+        if (Objects.isNull(roles)) { 
+                      
             this.roles.add(ERole.ROLE_MANAGER.name());
         }
         if (Objects.isNull(isEnabled)) {

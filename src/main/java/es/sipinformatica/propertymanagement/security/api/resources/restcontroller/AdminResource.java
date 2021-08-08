@@ -56,7 +56,7 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(MOBILE_ID)
-    public void delete(@PathVariable String mobile) {
+    public void deleteByMobile(@PathVariable String mobile) {
         this.adminService.delete(this.adminService.readByMobile(mobile));
     }
 
@@ -77,6 +77,25 @@ public class AdminResource {
     @DeleteMapping(EMAIL)
     public void deleteByEmail(@PathVariable String email) {
         this.adminService.delete(this.adminService.readByEmail(email));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(DNI)
+    public void updateByDni(@Valid @RequestBody UserDto updateUserDto, @PathVariable String dni) {
+        this.adminService.updateByEmail(dni, updateUserDto.toUser());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(DNI)
+    public UserDto readUserByDni(@PathVariable String dni) {
+
+        return new UserDto(this.adminService.readByDni(dni));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(DNI)
+    public void deleteByDni(@PathVariable String dni) {
+        this.adminService.delete(this.adminService.readByDni(dni));
     }
 
 }

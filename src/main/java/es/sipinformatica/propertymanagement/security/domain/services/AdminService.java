@@ -33,6 +33,10 @@ public class AdminService {
         this.userRepository.save(user);
     }
 
+    public void delete(User user) {
+        this.userRepository.delete(user);
+    }
+
     public User readByMobile(String mobile) {
         return this.userRepository.findByPhone(mobile)
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
@@ -44,11 +48,7 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
         this.userRepository.save(oldUser);
-    }
-
-    public void delete(User user) {
-        this.userRepository.delete(user);
-    }
+    }    
 
     private void checkMobile(String mobile) {
         if (Boolean.TRUE.equals(this.userRepository.existsByPhone(mobile))) {
@@ -71,6 +71,25 @@ public class AdminService {
     public void updateByEmail(String email, User user) {
         User oldUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("The email don't exist: " + email));
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        this.userRepository.save(oldUser);
+    }
+
+    private void checkDni(String dni) {
+        if (Boolean.TRUE.equals(this.userRepository.existsByDni(dni))) {
+            throw new ResourceConflictException("The dni already exists: " + dni);
+        }
+    }
+
+    public User readByDni(String dni) {
+        return this.userRepository.findByDni(dni)
+                .orElseThrow(() -> new ResourceNotFoundException("The Dni don't exist: " + dni));
+
+    }
+
+    public void updateByDni(String dni, User user) {
+        User oldUser = this.userRepository.findByDni(dni)
+                .orElseThrow(() -> new ResourceNotFoundException("The DNI don't exist: " + dni));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
         this.userRepository.save(oldUser);
     }

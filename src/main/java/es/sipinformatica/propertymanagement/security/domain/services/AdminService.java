@@ -30,6 +30,7 @@ public class AdminService {
         user.setFirstAccess(LocalDateTime.now());
         this.checkMobile(user.getPhone());
         this.checkEmail(user.getEmail());
+        this.checkDni(user.getDni());
         this.userRepository.save(user);
     }
 

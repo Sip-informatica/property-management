@@ -15,6 +15,13 @@ class RoleTest {
         role = new Role(1, ERole.ROLE_CUSTOMER);
         
         assertTrue(role.getName().equals(ERole.ROLE_CUSTOMER));
-    }    
+    }  
+    
+    @Test
+    void shouldBuilderRole() {
+        role = Role.builder().name(ERole.ROLE_ADMIN).build();
+
+        assertTrue(role.getName().equals(ERole.ROLE_ADMIN));
+    }
     
 }

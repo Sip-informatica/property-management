@@ -9,10 +9,20 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 
 class UserTest {
     private User user;
+    private User userBuilder;
 
     @BeforeEach
     void userInit(){
         this.user = new User("username", "email@sip.es", "password");
+        this.userBuilder = User.builder()
+        .username("usernamebuilder")
+        .email("emailbuilder@sip.es")
+        .password("password")
+        .isAccountNonExpired(true)
+        .isAccountNonLocked(true)
+        .isCredentialsNonExpired(true)
+        .isEnabled(true)
+        .build();
     }
     
     @Test
@@ -30,5 +40,11 @@ class UserTest {
         assertTrue(user.getIsAccountNonLocked());
         assertTrue(user.getIsCredentialsNonExpired());
         assertTrue(user.getIsEnabled());
+    }
+
+    @Test
+    void shouldNewUserBuilder(){
+        assertTrue(userBuilder.getUsername().contentEquals("usernamebuilder"));
+        assertTrue(userBuilder.getIsEnabled());
     }
 }

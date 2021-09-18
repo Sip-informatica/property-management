@@ -17,9 +17,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "users")
@@ -50,7 +56,8 @@ public class User {
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
-    private Boolean isEnabled;   
+    private Boolean isEnabled;       
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
          name = "user_roles",
@@ -64,11 +71,7 @@ public class User {
     private String city;
     private String country;
     private LocalDateTime firstAccess;
-    private LocalDateTime lastAccess;
-
-    public User(){
-        
-    }
+    private LocalDateTime lastAccess;    
     
     public User(String username, String email, String password) {
         this.username = username;

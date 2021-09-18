@@ -44,16 +44,24 @@ public class UserDto {
     private String password;
     private Boolean isEnabled;
     private LocalDateTime firstAccess;
+    private LocalDateTime lastAccess;
     @Singular
     private Set<String> roles;
+
+    private String username;
+    private Boolean isAccountNonExpired;
+    private Boolean isAccountNonLocked;
+    private Boolean isCredentialsNonExpired;
+    private String city;
+    private String country;
 
     public UserDto(User user) {
         String secret = "secret";
         BeanUtils.copyProperties(user, this);
-        
+
         this.password = secret;
         this.roles = user.getRoles().stream().map(Role::getName).map(ERole::name).collect(Collectors.toSet());
-        
+
     }
 
     public static UserDto ofMobileFirstName(User user) {
@@ -66,15 +74,19 @@ public class UserDto {
 
         return UserDto.builder().mobile(user.getPhone()).firstName(user.getFirstName()).lastName(user.getLastName())
                 .dni(user.getDni()).email(user.getEmail()).address(user.getAddress()).password("secret")
-                .isEnabled(user.getIsEnabled()).roles(role).firstAccess(user.getFirstAccess()).build();
+                .isEnabled(user.getIsEnabled()).roles(role).firstAccess(user.getFirstAccess())
+                .lastAccess(user.getLastAccess()).username(user.getUsername())
+                .isAccountNonExpired(user.getIsAccountNonExpired()).isAccountNonLocked(user.getIsAccountNonLocked())
+                .isCredentialsNonExpired(user.getIsCredentialsNonExpired()).city(user.getCity())
+                .country(user.getCountry()).build();
     }
 
     public void doDefault() {
         if (Objects.isNull(password)) {
             password = UUID.randomUUID().toString();
         }
-        if (Objects.isNull(roles)) { 
-                      
+        if (Objects.isNull(roles)) {
+
             this.roles.add(ERole.ROLE_MANAGER.name());
         }
         if (Objects.isNull(isEnabled)) {
@@ -84,9 +96,9 @@ public class UserDto {
 
     public User toUser() {
         this.doDefault();
-        this.password = new BCryptPasswordEncoder().encode(this.password);           
-        User user = new User();        
-        BeanUtils.copyProperties(this, user);          
+        this.password = new BCryptPasswordEncoder().encode(this.password);
+        User user = new User();
+        BeanUtils.copyProperties(this, user);
         return user;
     }
 

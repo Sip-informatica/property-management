@@ -77,8 +77,8 @@ class UserDtoTest {
           
                
         assertNotEquals("secret", userDto.toUser().getPassword());
-        assertEquals("[ROLE_MANAGER, ROLE_ADMIN]", roles);
-        //assertEquals("[ROLE_MANAGER, ROLE_ADMIN]", userDto.toUser().getRoles().toString());
+        assertEquals(2, roles.size());
+        assertTrue(roles.contains("ROLE_ADMIN") && roles.contains("ROLE_MANAGER"));
         assertEquals("First-Name", userDto.getFirstName());
         assertTrue(userDto.toUser().getIsEnabled());
     }

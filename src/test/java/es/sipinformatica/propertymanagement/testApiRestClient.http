@@ -71,7 +71,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlI
 ###
 GET http://localhost:8080/api/auth/users-admin HTTP/1.1
 Content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9BRE1JTixST0xFX01BTkFHRVIiLCJpYXQiOjE2Mjc4NDc5OTIsImV4cCI6MTYyNzkzNDM5Mn0.G8vMWPokTU8qI642fcVM7YO-Rpm2WRcTyyQKX7Jve78eVUWTo7f3fh3yfCBc1UiOceZBw4QmFU_7arlGaHM-Bg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2Mjg3OTk1NTMsImV4cCI6MTYyODg4NTk1M30.0Q-91JaFPpbgZdAzmUOFrWL0R7PEMb6vgay1w_mKUskaT8YRRltocsMZ-nKBdIMw0E9TDpBhMXSosAe7y9on2w
 ###
 DELETE  http://localhost:8080/api/auth/users-admin/email/v@v.es HTTP/1.1
 Content-Type: : application/json

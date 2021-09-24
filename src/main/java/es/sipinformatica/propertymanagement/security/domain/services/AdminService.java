@@ -1,13 +1,18 @@
 package es.sipinformatica.propertymanagement.security.domain.services;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.sipinformatica.propertymanagement.security.data.daos.RoleRepository;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
+import es.sipinformatica.propertymanagement.security.data.model.ERole;
+import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
@@ -16,6 +21,9 @@ import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceN
 public class AdminService {
 
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    private static final String ERROR = "Error: ";
 
     @Autowired
     public AdminService(UserRepository userRepository) {
@@ -26,12 +34,31 @@ public class AdminService {
         return this.userRepository.findAll().stream();
     }
 
-    public void create(User user) {
+    public void create(User user, Set<String> roles) {
         user.setFirstAccess(LocalDateTime.now());
+        this.mapRoles(user, roles);
         this.checkMobile(user.getPhone());
         this.checkEmail(user.getEmail());
         this.checkDni(user.getDni());
         this.userRepository.save(user);
+    }
+
+    public User mapRoles(User user, Set<String> roles) {
+        Set<String> eRoleValue = Stream.of(ERole.values()).map(ERole::name).collect(Collectors.toSet());
+        Set<Role> rolesOfUser = eRoleValue.stream().filter(role -> roles.contains(role))
+                .map(role -> ERole.valueOf(role))
+                .map(role -> roleRepository.findByName(role)
+                        .orElseThrow(() -> new ResourceNotFoundException(ERROR + role.name() + " Role is not found")))
+                .collect(Collectors.toSet());
+
+        if (rolesOfUser.isEmpty()) {
+            rolesOfUser = Stream.of(ERole.ROLE_MANAGER)
+                    .map(role -> roleRepository.findByName(role).orElseThrow(
+                            () -> new ResourceNotFoundException(ERROR + role.name() + " Role is not found")))
+                    .collect(Collectors.toSet());
+        }
+        user.setRoles(rolesOfUser);
+        return user;
     }
 
     public void delete(User user) {
@@ -49,7 +76,7 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
         this.userRepository.save(oldUser);
-    }    
+    }
 
     private void checkMobile(String mobile) {
         if (Boolean.TRUE.equals(this.userRepository.existsByPhone(mobile))) {

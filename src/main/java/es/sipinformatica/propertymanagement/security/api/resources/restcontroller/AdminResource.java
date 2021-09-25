@@ -1,15 +1,22 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.UserDto;
-import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.domain.services.AdminService;
 
 @RestController
@@ -35,10 +42,11 @@ public class AdminResource {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = ROLE)
-    public void create(@Valid @RequestBody UserDto creationUserDto, @PathVariable ERole role) {
+    @PostMapping()
+    public void create(@Valid @RequestBody UserDto creationUserDto) {
         creationUserDto.doDefault();
-        this.adminService.create(creationUserDto.toUser());
+        Set<String> roles = creationUserDto.roles();
+        this.adminService.create(creationUserDto.toUser(), roles);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

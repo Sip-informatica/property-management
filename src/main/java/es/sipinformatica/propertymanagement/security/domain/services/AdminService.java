@@ -1,21 +1,30 @@
 package es.sipinformatica.propertymanagement.security.domain.services;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.sipinformatica.propertymanagement.security.data.daos.RoleRepository;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
+import es.sipinformatica.propertymanagement.security.data.model.ERole;
+import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
+import lombok.NonNull;
 
 @Service
 public class AdminService {
 
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    private static final String ERROR = "Error: ";
 
     @Autowired
     public AdminService(UserRepository userRepository) {
@@ -26,12 +35,37 @@ public class AdminService {
         return this.userRepository.findAll().stream();
     }
 
-    public void create(User user) {
+    public void create(User user, Set<String> roles) {
         user.setFirstAccess(LocalDateTime.now());
+        user.setIsAccountNonExpired(true);
+        user.setIsAccountNonLocked(true);
+        user.setIsCredentialsNonExpired(true);
+        user.setIsEnabled(true);
+        this.mapRoles(user, roles);
         this.checkMobile(user.getPhone());
         this.checkEmail(user.getEmail());
         this.checkDni(user.getDni());
+        this.checkUsername(user.getUsername());
+        this.fillUsername(user);
         this.userRepository.save(user);
+    }
+
+    public User mapRoles(User user, Set<String> roles) {
+        Set<String> eRoleValue = Stream.of(ERole.values()).map(ERole::name).collect(Collectors.toSet());
+        Set<Role> rolesOfUser = eRoleValue.stream().filter(role -> roles.contains(role))
+                .map(role -> ERole.valueOf(role))
+                .map(role -> roleRepository.findByName(role)
+                        .orElseThrow(() -> new ResourceNotFoundException(ERROR + role.name() + " Role is not found")))
+                .collect(Collectors.toSet());
+
+        if (rolesOfUser.isEmpty()) {
+            rolesOfUser = Stream.of(ERole.ROLE_MANAGER)
+                    .map(role -> roleRepository.findByName(role).orElseThrow(
+                            () -> new ResourceNotFoundException(ERROR + role.name() + " Role is not found")))
+                    .collect(Collectors.toSet());
+        }
+        user.setRoles(rolesOfUser);
+        return user;
     }
 
     public void delete(User user) {
@@ -49,7 +83,7 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
         this.userRepository.save(oldUser);
-    }    
+    }
 
     private void checkMobile(String mobile) {
         if (Boolean.TRUE.equals(this.userRepository.existsByPhone(mobile))) {
@@ -93,5 +127,31 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("The DNI don't exist: " + dni));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
         this.userRepository.save(oldUser);
+    }
+
+    private void checkUsername(String username) {
+        if (Boolean.TRUE.equals(this.userRepository.existsByUsername(username))) {
+            throw new ResourceConflictException("The Username already exists: " + username);
+        }
+    }
+
+    public User readByUsername(String username) {
+        return this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
+
+    }
+
+    public void updateByusername(String username, User user) {
+        User oldUser = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        this.userRepository.save(oldUser);
+    }
+
+    private User fillUsername(User user) {
+        if (user.getUsername() == null || user.getUsername().isEmpty() || user.getUsername().trim().isEmpty()) {
+            user.setUsername(user.getEmail());            
+        }
+        return user;       
     }
 }

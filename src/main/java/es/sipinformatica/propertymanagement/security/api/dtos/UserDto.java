@@ -53,8 +53,8 @@ public class UserDto {
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
     private String city;
-    private String country;
-
+    private String country;  
+    
     public UserDto(User user) {
         String secret = "secret";
         BeanUtils.copyProperties(user, this);
@@ -81,12 +81,12 @@ public class UserDto {
                 .country(user.getCountry()).build();
     }
 
-    public void doDefault() {
+    public void doDefault() {                 
+
         if (Objects.isNull(password)) {
             password = UUID.randomUUID().toString();
         }
         if (Objects.isNull(roles)) {
-
             this.roles.add(ERole.ROLE_MANAGER.name());
         }
         if (Objects.isNull(isEnabled)) {
@@ -95,11 +95,16 @@ public class UserDto {
     }
 
     public User toUser() {
-        this.doDefault();
+        this.doDefault();        
         this.password = new BCryptPasswordEncoder().encode(this.password);
         User user = new User();
         BeanUtils.copyProperties(this, user);
+        user.getRoles().clear();
         return user;
     }
 
+    public Set<String> roles() {
+        Set<String> roles = this.getRoles().stream().collect(Collectors.toSet());   
+        return roles;
+    }
 }

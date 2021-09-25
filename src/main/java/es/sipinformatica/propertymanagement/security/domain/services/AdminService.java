@@ -16,6 +16,7 @@ import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
+import lombok.NonNull;
 
 @Service
 public class AdminService {
@@ -36,10 +37,16 @@ public class AdminService {
 
     public void create(User user, Set<String> roles) {
         user.setFirstAccess(LocalDateTime.now());
+        user.setIsAccountNonExpired(true);
+        user.setIsAccountNonLocked(true);
+        user.setIsCredentialsNonExpired(true);
+        user.setIsEnabled(true);
         this.mapRoles(user, roles);
         this.checkMobile(user.getPhone());
         this.checkEmail(user.getEmail());
         this.checkDni(user.getDni());
+        this.checkUsername(user.getUsername());
+        this.fillUsername(user);
         this.userRepository.save(user);
     }
 
@@ -120,5 +127,31 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("The DNI don't exist: " + dni));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
         this.userRepository.save(oldUser);
+    }
+
+    private void checkUsername(String username) {
+        if (Boolean.TRUE.equals(this.userRepository.existsByUsername(username))) {
+            throw new ResourceConflictException("The Username already exists: " + username);
+        }
+    }
+
+    public User readByUsername(String username) {
+        return this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
+
+    }
+
+    public void updateByusername(String username, User user) {
+        User oldUser = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        this.userRepository.save(oldUser);
+    }
+
+    private User fillUsername(User user) {
+        if (user.getUsername() == null || user.getUsername().isEmpty() || user.getUsername().trim().isEmpty()) {
+            user.setUsername(user.getEmail());            
+        }
+        return user;       
     }
 }

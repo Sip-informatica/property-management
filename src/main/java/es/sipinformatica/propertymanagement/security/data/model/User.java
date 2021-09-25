@@ -39,10 +39,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;   
     @Column(unique = true)
-    private String dni;
-    @NotBlank   
-    @NonNull
-    @Column(unique = true, nullable = false)
+    private String dni;        
+    @Column(unique = true)
     private String username;
     @NotBlank
     @NonNull

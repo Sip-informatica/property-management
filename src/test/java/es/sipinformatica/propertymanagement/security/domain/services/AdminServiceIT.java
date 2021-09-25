@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
@@ -26,18 +27,23 @@ class AdminServiceIT {
     Set<Role> roles = new HashSet<>();
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private UserRepository userRepository;
+    private User userBuilderCreate;
 
     @BeforeEach
     void userInit() {
         this.roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
         this.roles.add(Role.builder().name(ERole.ROLE_CUSTOMER).build());
 
-        this.userBuilder = User.builder().username("administradorTest").email("emailTest@sip.es").phone("phoneTest")
+        this.userBuilderCreate = User.builder().email("emailCreateTest@sip.es").username("   ")
+                .phone("phoneCreateTest").dni("dniCreateTest").password("password").roles(roles).build();
+        this.userBuilder = User.builder().username("usernameRoles").email("emailTest@sip.es").phone("phoneTest")
                 .dni("dniTest").password("password").roles(roles).build();
     }
 
     @Test
-    void shouldCreateUser() {
+    void shouldMapRoles() {
         Set<String> rolesString = new HashSet<>();
         userBuilder.getRoles().clear();
 
@@ -52,7 +58,26 @@ class AdminServiceIT {
         assertFalse(roles.contains("ROLE_AUTHENTICATED"));
 
         rolesString.clear();
-        assertFalse(roles.contains("ROLE_MANAGER"));
+        adminService.mapRoles(userBuilder, rolesString);
+        Set<String> rolesClear = userBuilder.getRoles().stream().map(Role::getName).map(ERole::name)
+                .collect(Collectors.toSet());
+        assertTrue(rolesClear.contains("ROLE_MANAGER"));
+    }
+
+    @Test
+    void shouldCreateUser() {
+
+        Set<String> rolesString = new HashSet<>();
+        rolesString.add("ROLE_ADMIN");
+        adminService.create(userBuilderCreate, rolesString);
+        User userTest = userRepository.findByEmail("emailCreateTest@sip.es").orElseThrow();
+        Set<String> roles = userTest.getRoles().stream().map(Role::getName).map(ERole::name)
+                .collect(Collectors.toSet());               
+
+        assertTrue(roles.contains("ROLE_ADMIN"));
+        assertTrue(userTest.getUsername().contentEquals("emailCreateTest@sip.es"));
+
+        userRepository.delete(userTest);
     }
 
 }

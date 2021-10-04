@@ -1,11 +1,14 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.UserDto;
+import es.sipinformatica.propertymanagement.security.api.httpserrors.MessageResponse;
 import es.sipinformatica.propertymanagement.security.domain.services.AdminService;
 
 @RestController
@@ -27,6 +31,7 @@ public class AdminResource {
     public static final String EMAIL = "/email/{email}";
     public static final String DNI = "/dni/{dni}";
     public static final String ROLE = "/role/{role}";
+    private static final String USERNAME = "/username/{username}";
 
     private AdminService adminService;
 
@@ -43,10 +48,15 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
-    public void create(@Valid @RequestBody UserDto creationUserDto) {
+    public ResponseEntity<Object> create(@Valid @RequestBody UserDto creationUserDto) {
         creationUserDto.doDefault();
-        Set<String> roles = creationUserDto.roles();
+        Set<String> roles = creationUserDto.getRolesUserDto();
         this.adminService.create(creationUserDto.toUser(), roles);
+
+        return ResponseEntity.ok(new MessageResponse(creationUserDto.getUsername() 
+        + " User registered successfully, Role: " 
+        + roles.stream().collect(Collectors.toList())
+        + " " + HttpStatus.CREATED ));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -57,7 +67,7 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(MOBILE_ID)
-    public UserDto readUser(@PathVariable String mobile) {
+    public UserDto readByMobile(@PathVariable String mobile) {
 
         return new UserDto(this.adminService.readByMobile(mobile));
     }
@@ -104,6 +114,25 @@ public class AdminResource {
     @DeleteMapping(DNI)
     public void deleteByDni(@PathVariable String dni) {
         this.adminService.delete(this.adminService.readByDni(dni));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(USERNAME)
+    public void updateByUsername(@Valid @RequestBody UserDto updateUserDto, @PathVariable String username) {
+        this.adminService.updateByUsername(username, updateUserDto.toUser());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(USERNAME)
+    public UserDto readUserByUsername(@PathVariable String username) {
+
+        return new UserDto(this.adminService.readByUsername(username));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(USERNAME)
+    public void deleteByUsername(@PathVariable String username) {
+        this.adminService.delete(this.adminService.readByUsername(username));
     }
 
 }

@@ -16,7 +16,6 @@ import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
-import lombok.NonNull;
 
 @Service
 public class AdminService {
@@ -35,20 +34,18 @@ public class AdminService {
         return this.userRepository.findAll().stream();
     }
 
-    public void create(User user, Set<String> roles) {
-        user.setFirstAccess(LocalDateTime.now());
-        user.setIsAccountNonExpired(true);
-        user.setIsAccountNonLocked(true);
-        user.setIsCredentialsNonExpired(true);
-        user.setIsEnabled(true);
+    public void create(User user, Set<String> roles) {             
         this.mapRoles(user, roles);
         this.checkMobile(user.getPhone());
         this.checkEmail(user.getEmail());
         this.checkDni(user.getDni());
         this.checkUsername(user.getUsername());
         this.fillUsername(user);
+        this.checkIsBoleanAccount(user);
+        user.setFirstAccess(LocalDateTime.now()); 
+        user.setLastAccess(LocalDateTime.now());
         this.userRepository.save(user);
-    }
+    }   
 
     public User mapRoles(User user, Set<String> roles) {
         Set<String> eRoleValue = Stream.of(ERole.values()).map(ERole::name).collect(Collectors.toSet());
@@ -82,6 +79,7 @@ public class AdminService {
         User oldUser = this.userRepository.findByPhone(mobile)
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
 
@@ -107,6 +105,7 @@ public class AdminService {
         User oldUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("The email don't exist: " + email));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
 
@@ -126,6 +125,7 @@ public class AdminService {
         User oldUser = this.userRepository.findByDni(dni)
                 .orElseThrow(() -> new ResourceNotFoundException("The DNI don't exist: " + dni));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
 
@@ -141,10 +141,11 @@ public class AdminService {
 
     }
 
-    public void updateByusername(String username, User user) {
+    public void updateByUsername(String username, User user) {
         User oldUser = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
         BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
 
@@ -153,5 +154,22 @@ public class AdminService {
             user.setUsername(user.getEmail());            
         }
         return user;       
+    }
+
+    private User checkIsBoleanAccount(User user) {
+        if (user.getIsAccountNonExpired() == null) {
+            user.setIsAccountNonExpired(true);           
+        }
+        if (user.getIsAccountNonLocked() == null) {
+            user.setIsAccountNonLocked(true);           
+        }
+        if (user.getIsCredentialsNonExpired() == null) {
+            user.setIsCredentialsNonExpired(true);           
+        }
+        if (user.getIsEnabled() == null) {
+            user.setIsEnabled(true);           
+        }
+        return user;
+
     }
 }

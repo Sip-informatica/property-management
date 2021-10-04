@@ -18,51 +18,44 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 class UserDtoTest {
     private User user;
     Set<Role> roles = new HashSet<>();
-    
+
     @BeforeEach
     void initData() {
-      roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
-      roles.add(Role.builder().name(ERole.ROLE_MANAGER).build());
+        roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
+        roles.add(Role.builder().name(ERole.ROLE_MANAGER).build());
 
-      user = User.builder()
-        .phone("666777888")
-        .roles(roles)
-        .dni("44444444Q")
-        .email("email@email.com")
-        .username("User-name")
-        .password("password")
-        .firstName("First-Name")
-        .build();
+        user = User.builder().phone("666777888").roles(roles).dni("44444444Q").email("email@sip.es")
+                .username("User-name").password("password").firstName("First-Name").build();
     }
 
     @Test
     void shouldUserDto() {
         UserDto userDto = new UserDto(user);
-        
+
         assertEquals("44444444Q", userDto.getDni());
         assertEquals("[ROLE_MANAGER, ROLE_ADMIN]", userDto.getRoles().toString());
     }
 
     @Test
-    void shouldOfMobileFirstName(){
+    void shouldOfMobileFirstName() {
         UserDto userDto = UserDto.ofMobileFirstName(user);
 
         assertEquals("First-Name", userDto.getFirstName());
     }
 
     @Test
-    void shouldOfUser(){
+    void shouldOfUser() {
         UserDto userDto = UserDto.ofUser(user);
 
         assertNotEquals("password", userDto.getPassword());
         assertEquals("secret", userDto.getPassword());
-    }  
-    
+    }
+
     @Test
     void shouldDoDefault() {
         UserDto userDto = new UserDto(user);
         userDto.doDefault();
-        
+
         assertEquals("secret", userDto.getPassword());
         assertEquals("[ROLE_MANAGER, ROLE_ADMIN]", userDto.getRoles().toString());
         assertTrue(userDto.getIsEnabled());
@@ -70,12 +63,9 @@ class UserDtoTest {
 
     @Test
     void shouldToUser() {
-        UserDto userDto = new UserDto(user); 
-        Set<String> roles = user.getRoles().stream()
-        .map(Role::getName).map(ERole::name).collect(Collectors.toSet());
-       
-          
-               
+        UserDto userDto = new UserDto(user);
+        Set<String> roles = user.getRoles().stream().map(Role::getName).map(ERole::name).collect(Collectors.toSet());
+
         assertNotEquals("secret", userDto.toUser().getPassword());
         assertEquals(2, roles.size());
         assertTrue(roles.contains("ROLE_ADMIN") && roles.contains("ROLE_MANAGER"));

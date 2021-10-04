@@ -23,61 +23,64 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 @SpringBootTest
 class AdminServiceIT {
 
-    private User userBuilder;
-    Set<Role> roles = new HashSet<>();
-    @Autowired
-    private AdminService adminService;
-    @Autowired
-    private UserRepository userRepository;
-    private User userBuilderCreate;
+        private User userBuilder;
+        Set<Role> roles = new HashSet<>();
+        @Autowired
+        private AdminService adminService;
+        @Autowired
+        private UserRepository userRepository;
+        private User userBuilderCreate;
 
-    @BeforeEach
-    void userInit() {
-        this.roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
-        this.roles.add(Role.builder().name(ERole.ROLE_CUSTOMER).build());
+        @BeforeEach
+        void userInit() {
+                this.roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
+                this.roles.add(Role.builder().name(ERole.ROLE_CUSTOMER).build());
 
-        this.userBuilderCreate = User.builder().email("emailCreateTest@sip.es").username("   ")
-                .phone("phoneCreateTest").dni("dniCreateTest").password("password").roles(roles).build();
-        this.userBuilder = User.builder().username("usernameRoles").email("emailTest@sip.es").phone("phoneTest")
-                .dni("dniTest").password("password").roles(roles).build();
-    }
+                this.userBuilderCreate = User.builder().email("emailCreateTest@sip.es").username("   ")
+                                .phone("phoneCreateTest").dni("dniCreateTest").password("password").roles(roles)
+                                .isEnabled(false).build();
+                this.userBuilder = User.builder().username("usernameRoles").email("emailTest@sip.es").phone("phoneTest")
+                                .dni("dniTest").password("password").roles(roles).build();
+        }
 
-    @Test
-    void shouldMapRoles() {
-        Set<String> rolesString = new HashSet<>();
-        userBuilder.getRoles().clear();
+        @Test
+        void shouldMapRoles() {
+                Set<String> rolesString = new HashSet<>();
+                userBuilder.getRoles().clear();
 
-        rolesString.add("ERROR_ADMIN");
-        rolesString.add("ROLE_ADMIN");
-        adminService.mapRoles(userBuilder, rolesString);
-        Set<String> roles = userBuilder.getRoles().stream().map(Role::getName).map(ERole::name)
-                .collect(Collectors.toSet());
+                rolesString.add("ERROR_ADMIN");
+                rolesString.add("ROLE_ADMIN");
+                adminService.mapRoles(userBuilder, rolesString);
+                Set<String> roles = userBuilder.getRoles().stream().map(Role::getName).map(ERole::name)
+                                .collect(Collectors.toSet());
 
-        assertFalse(roles.contains("ERROR_ADMIN"));
-        assertTrue(roles.contains("ROLE_ADMIN"));
-        assertFalse(roles.contains("ROLE_AUTHENTICATED"));
+                assertFalse(roles.contains("ERROR_ADMIN"));
+                assertTrue(roles.contains("ROLE_ADMIN"));
+                assertFalse(roles.contains("ROLE_AUTHENTICATED"));
 
-        rolesString.clear();
-        adminService.mapRoles(userBuilder, rolesString);
-        Set<String> rolesClear = userBuilder.getRoles().stream().map(Role::getName).map(ERole::name)
-                .collect(Collectors.toSet());
-        assertTrue(rolesClear.contains("ROLE_MANAGER"));
-    }
+                rolesString.clear();
+                adminService.mapRoles(userBuilder, rolesString);
+                Set<String> rolesClear = userBuilder.getRoles().stream().map(Role::getName).map(ERole::name)
+                                .collect(Collectors.toSet());
+                assertTrue(rolesClear.contains("ROLE_MANAGER"));
+        }
 
-    @Test
-    void shouldCreateUser() {
+        @Test
+        void shouldCreateUser() {
 
-        Set<String> rolesString = new HashSet<>();
-        rolesString.add("ROLE_ADMIN");
-        adminService.create(userBuilderCreate, rolesString);
-        User userTest = userRepository.findByEmail("emailCreateTest@sip.es").orElseThrow();
-        Set<String> roles = userTest.getRoles().stream().map(Role::getName).map(ERole::name)
-                .collect(Collectors.toSet());               
+                Set<String> rolesString = new HashSet<>();
+                rolesString.add("ROLE_ADMIN");
+                adminService.create(userBuilderCreate, rolesString);
+                User userTest = userRepository.findByEmail("emailCreateTest@sip.es").orElseThrow();
+                Set<String> roles = userTest.getRoles().stream().map(Role::getName).map(ERole::name)
+                                .collect(Collectors.toSet());
 
-        assertTrue(roles.contains("ROLE_ADMIN"));
-        assertTrue(userTest.getUsername().contentEquals("emailCreateTest@sip.es"));
+                assertTrue(roles.contains("ROLE_ADMIN"));
+                assertTrue(userTest.getUsername().contentEquals("emailCreateTest@sip.es"));
+                assertTrue(userTest.getIsAccountNonLocked());
+                assertFalse(userTest.getIsEnabled());
 
-        userRepository.delete(userTest);
-    }
+                userRepository.delete(userTest);
+        }
 
 }

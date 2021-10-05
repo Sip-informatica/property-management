@@ -87,7 +87,7 @@ public class UserDto {
     public void doDefault() {                 
 
         if (Objects.isNull(password)) {
-            password = UUID.randomUUID().toString();
+            this.password = UUID.randomUUID().toString();
         }
         if (Objects.isNull(roles)) {
             this.roles.add(ERole.ROLE_MANAGER.name());
@@ -106,7 +106,7 @@ public class UserDto {
         return user;
     }
 
-    public Set<String> getRolesUserDto() {
+    public Set<String> RolesUserDto() {
         Set<String> rolesUserDto = this.getRoles().stream().collect(Collectors.toSet());   
         return rolesUserDto;
     }

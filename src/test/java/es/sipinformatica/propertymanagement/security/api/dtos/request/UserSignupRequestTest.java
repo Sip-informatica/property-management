@@ -23,6 +23,6 @@ class UserSignupRequestTest {
     }
     @Test
     void shouldGetRole(){
-        assertNull(userSignupRequest.getRole());
+        assertNull(userSignupRequest.getRoles());
     }
 }

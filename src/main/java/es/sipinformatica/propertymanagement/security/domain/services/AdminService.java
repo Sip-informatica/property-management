@@ -44,7 +44,7 @@ public class AdminService {
         this.checkIsBoleanAccount(user);
         user.setFirstAccess(LocalDateTime.now()); 
         user.setLastAccess(LocalDateTime.now());
-        this.userRepository.save(user);
+        userRepository.save(user);
     }   
 
     public User mapRoles(User user, Set<String> roles) {

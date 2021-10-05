@@ -41,8 +41,8 @@ content-Type: application/json
 }
 ###
 GET http://localhost:8080/api/test/admin HTTP/1.1
-Content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjEyMzUwNDczLCJleHAiOjE2MTI0MzY4NzN9.yGmt6SxVo2E13kbeW1UZrabYgMeIdHIiUSaL64aXG2uYpqvoA4Q-Uxol-1b7DSRJHyyfF_GH8mDIMGVdlSYFUw
+content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjMzNDUzNjkzLCJleHAiOjE2MzM1NDAwOTN9.B6QzxMWjYP-fotkdbYQuk2AtoDVEE9-bwfTa5E5k3S_LVLjI-MO02LkjctQaMwHxxFMUVtzOzsJahZPg5MNkaA
 ###
 POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-Type: application/json
@@ -53,7 +53,7 @@ content-Type: application/json
 }
 ###
 GET http://localhost:8080/api/test/manager HTTP/1.1
-Content-Type: : application/json
+content-Type: : application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
 ###
 POST http://localhost:8080/api/auth/signin HTTP/1.1
@@ -65,24 +65,48 @@ content-Type: application/json
 }
 ###
 GET http://localhost:8080/api/test/adminmanager HTTP/1.1
-Content-Type: : application/json
+content-Type: : application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9BRE1JTixST0xFX01BTkFHRVIiLCJpYXQiOjE2Mjc4NDc5OTIsImV4cCI6MTYyNzkzNDM5Mn0.G8vMWPokTU8qI642fcVM7YO-Rpm2WRcTyyQKX7Jve78eVUWTo7f3fh3yfCBc1UiOceZBw4QmFU_7arlGaHM-Bg
 
 ###
-GET http://localhost:8080/api/auth/users-admin HTTP/1.1
-Content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2Mjg3OTk1NTMsImV4cCI6MTYyODg4NTk1M30.0Q-91JaFPpbgZdAzmUOFrWL0R7PEMb6vgay1w_mKUskaT8YRRltocsMZ-nKBdIMw0E9TDpBhMXSosAe7y9on2w
+GET http://localhost:8080/api/admin/users-admin HTTP/1.1
+content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjMzNDUzNjkzLCJleHAiOjE2MzM1NDAwOTN9.B6QzxMWjYP-fotkdbYQuk2AtoDVEE9-bwfTa5E5k3S_LVLjI-MO02LkjctQaMwHxxFMUVtzOzsJahZPg5MNkaA
 ###
-DELETE  http://localhost:8080/api/auth/users-admin/email/v@v.es HTTP/1.1
-Content-Type: : application/json
+DELETE  http://localhost:8080/api/admin/users-admin/email/v@v.es HTTP/1.1
+content-Type: : application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9BRE1JTixST0xFX01BTkFHRVIiLCJpYXQiOjE2Mjc4NDc5OTIsImV4cCI6MTYyNzkzNDM5Mn0.G8vMWPokTU8qI642fcVM7YO-Rpm2WRcTyyQKX7Jve78eVUWTo7f3fh3yfCBc1UiOceZBw4QmFU_7arlGaHM-Bg
 
 ###
 ###
 GET http://localhost:8080/api/test/operator HTTP/1.1
-Content-Type: : application/json
+content-Type: : application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
 ###
 GET http://localhost:8080/api/test/authenticated HTTP/1.1
-Content-Type: : application/json
+content-Type: : application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
+
+###
+POST http://localhost:8080/api/admin/users-admin HTTP/1.1
+content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjMzNDUzNjkzLCJleHAiOjE2MzM1NDAwOTN9.B6QzxMWjYP-fotkdbYQuk2AtoDVEE9-bwfTa5E5k3S_LVLjI-MO02LkjctQaMwHxxFMUVtzOzsJahZPg5MNkaA
+
+ {
+    "phone": "33rr33r33",
+    "email": "ailn@sip.es",
+    "dni": "rrrrrrytyttry",
+    "password": "secttet",
+    "isEnabled": true,
+    "roles": [
+      "ROLE_MANAGER",
+      "ROLE_ADMIN"
+    ],
+    "username": "admingo",
+    "isAccountNonExpired": true,
+    "isAccountNonLocked": true,
+    "isCredentialsNonExpired": true
+  }
+
+###
+

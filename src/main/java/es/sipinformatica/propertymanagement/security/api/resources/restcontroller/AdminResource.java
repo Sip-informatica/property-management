@@ -24,7 +24,7 @@ import es.sipinformatica.propertymanagement.security.api.httpserrors.MessageResp
 import es.sipinformatica.propertymanagement.security.domain.services.AdminService;
 
 @RestController
-@RequestMapping("/api/auth" + AdminResource.ADMIN)
+@RequestMapping("/api/admin" + AdminResource.ADMIN)
 public class AdminResource {
     public static final String ADMIN = "/users-admin";
     public static final String MOBILE_ID = "/phone/{mobile}";
@@ -50,7 +50,7 @@ public class AdminResource {
     @PostMapping()
     public ResponseEntity<Object> create(@Valid @RequestBody UserDto creationUserDto) {
         creationUserDto.doDefault();
-        Set<String> roles = creationUserDto.getRolesUserDto();
+        Set<String> roles = creationUserDto.RolesUserDto();
         this.adminService.create(creationUserDto.toUser(), roles);
 
         return ResponseEntity.ok(new MessageResponse(creationUserDto.getUsername() 

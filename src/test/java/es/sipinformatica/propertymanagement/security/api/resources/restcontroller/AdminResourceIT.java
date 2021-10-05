@@ -65,7 +65,7 @@ class AdminResourceIT {
     @WithMockUser(roles = "ADMIN")
     void readAllTest() throws Exception {
         this.mockMvc.perform(
-                MockMvcRequestBuilders.request(HttpMethod.GET, this.restTemplate.getRootUri() + "api/auth/users-admin"))
+                MockMvcRequestBuilders.request(HttpMethod.GET, this.restTemplate.getRootUri() + "api/admin/users-admin"))
                 .andExpect(status().isOk());
     }
 
@@ -73,7 +73,7 @@ class AdminResourceIT {
     @WithMockUser(roles = "MANAGER")
     void readAllForbiddenTest() throws Exception {
         this.mockMvc.perform(
-                MockMvcRequestBuilders.request(HttpMethod.GET, this.restTemplate.getRootUri() + "api/auth/users-admin"))
+                MockMvcRequestBuilders.request(HttpMethod.GET, this.restTemplate.getRootUri() + "api/admin/users-admin"))
                 .andExpect(status().isForbidden());
     }
 
@@ -82,7 +82,7 @@ class AdminResourceIT {
     void readUserByEmailTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.request(HttpMethod.GET,
-                        this.restTemplate.getRootUri() + "api/auth/users-admin/email/q@q.es"))
+                        this.restTemplate.getRootUri() + "api/admin/users-admin/email/q@q.es"))
                 .andExpect(status().isNotFound()).andExpect(jsonPath("$.status").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.errors").value("The email don't exist: q@q.es"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
@@ -93,7 +93,7 @@ class AdminResourceIT {
     void shouldCreate() throws Exception {
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/auth/users-admin")
+                .perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
                         .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.message").hasJsonPath());
 

@@ -43,7 +43,7 @@ class AdminServiceIT {
                                 .dni("dniTest").password("password").roles(roles).build();
         }
 
-        @Test
+      /*  @Test
         void shouldMapRoles() {
                 Set<String> rolesString = new HashSet<>();
                 userBuilder.getRoles().clear();
@@ -81,6 +81,6 @@ class AdminServiceIT {
                 assertFalse(userTest.getIsEnabled());
 
                 userRepository.delete(userTest);
-        }
+        }*/
 
 }

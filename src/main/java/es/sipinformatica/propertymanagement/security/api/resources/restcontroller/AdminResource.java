@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +29,6 @@ public class AdminResource {
     public static final String MOBILE_ID = "/phone/{mobile}";
     public static final String EMAIL = "/email/{email}";
     public static final String DNI = "/dni/{dni}";
-    public static final String ROLE = "/role/{role}";
     private static final String USERNAME = "/username/{username}";
 
     private AdminService adminService;
@@ -53,10 +51,8 @@ public class AdminResource {
         Set<String> roles = creationUserDto.RolesUserDto();
         this.adminService.create(creationUserDto.toUser(), roles);
 
-        return ResponseEntity.ok(new MessageResponse(creationUserDto.getUsername() 
-        + " User registered successfully, Role: " 
-        + roles.stream().collect(Collectors.toList())
-        + " " + HttpStatus.CREATED ));
+        return ResponseEntity.ok(new MessageResponse(creationUserDto.getUsername()
+                + " User registered successfully, Role: " + roles.stream().collect(Collectors.toList())));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -74,14 +70,18 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(MOBILE_ID)
-    public void deleteByMobile(@PathVariable String mobile) {
+    public ResponseEntity<Object> deleteByMobile(@PathVariable String mobile) {
         this.adminService.delete(this.adminService.readByMobile(mobile));
+
+        return ResponseEntity.ok(new MessageResponse(mobile + " - User deleted successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(EMAIL)
-    public void updateByEmail(@Valid @RequestBody UserDto updateUserDto, @PathVariable String email) {
+    public ResponseEntity<Object> updateByEmail(@Valid @RequestBody UserDto updateUserDto, @PathVariable String email) {
         this.adminService.updateByEmail(email, updateUserDto.toUser());
+
+        return ResponseEntity.ok(new MessageResponse(email + " - User updated successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -93,8 +93,10 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(EMAIL)
-    public void deleteByEmail(@PathVariable String email) {
+    public ResponseEntity<Object> deleteByEmail(@PathVariable String email) {
         this.adminService.delete(this.adminService.readByEmail(email));
+
+        return ResponseEntity.ok(new MessageResponse(email + " - User deleted successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -112,8 +114,10 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(DNI)
-    public void deleteByDni(@PathVariable String dni) {
+    public ResponseEntity<Object> deleteByDni(@PathVariable String dni) {
         this.adminService.delete(this.adminService.readByDni(dni));
+
+        return ResponseEntity.ok(new MessageResponse(dni + " - User deleted successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -131,8 +135,10 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(USERNAME)
-    public void deleteByUsername(@PathVariable String username) {
+    public ResponseEntity<Object> deleteByUsername(@PathVariable String username) {
         this.adminService.delete(this.adminService.readByUsername(username));
+
+        return ResponseEntity.ok(new MessageResponse(username + " - User deleted successfully"));
     }
 
 }

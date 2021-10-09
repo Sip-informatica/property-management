@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.UserDto;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
@@ -47,8 +48,8 @@ class AdminResourceIT {
         this.roles.add("ROLE_ADMIN");
         this.roles.add("ROLE_CUSTOMER");
 
-        this.userBuilderCreate = UserDto.builder().email("emailCreateTest@sip.es").username("Create").phone("639736746")
-                .dni("dniCreateTest").password("password").build();
+        this.userBuilderCreate = UserDto.builder().username("Create").email("emailTest@sip.es").phone("639736746")
+                .dni("dniCreateTest").password("password").roles(roles).build();
         this.userBuilder = UserDto.builder().username("usernameRoles").email("emailTest@sip.es").phone("phoneTest")
                 .dni("dniTest").password("password").roles(roles).build();
     }
@@ -64,17 +65,15 @@ class AdminResourceIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void readAllTest() throws Exception {
-        this.mockMvc.perform(
-                MockMvcRequestBuilders.request(HttpMethod.GET, this.restTemplate.getRootUri() + "api/admin/users-admin"))
-                .andExpect(status().isOk());
+        this.mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET,
+                this.restTemplate.getRootUri() + "api/admin/users-admin")).andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "MANAGER")
     void readAllForbiddenTest() throws Exception {
-        this.mockMvc.perform(
-                MockMvcRequestBuilders.request(HttpMethod.GET, this.restTemplate.getRootUri() + "api/admin/users-admin"))
-                .andExpect(status().isForbidden());
+        this.mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET,
+                this.restTemplate.getRootUri() + "api/admin/users-admin")).andExpect(status().isForbidden());
     }
 
     @Test
@@ -99,6 +98,77 @@ class AdminResourceIT {
 
         User userTest = userRepository.findByEmail(userBuilder.getEmail()).orElseThrow();
         userRepository.delete(userTest);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldReadUpdateDeleteByEmail() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get(this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("emailTest@sip.es"));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put(this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail())
+                        .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilderCreate)))
+                .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("emailTest@sip.es - User updated successfully"));
+
+        userBuilderCreate.setUsername("manager");
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put(this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail())
+                        .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilderCreate)))
+                .andExpect(status().isConflict()).andExpect(MockMvcResultMatchers.jsonPath("$.errors")
+                        .value("The Username already exists: manager"));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.delete(
+                        this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail()))
+                .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("emailTest@sip.es - User deleted successfully"));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldDeleteByDni() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .delete(this.restTemplate.getRootUri() + "api/admin/users-admin/dni/" + userBuilder.getDni()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldDeleteByUsername() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.delete(
+                        this.restTemplate.getRootUri() + "api/admin/users-admin/username/" + userBuilder.getUsername()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldDeleteByPhone() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.delete(
+                        this.restTemplate.getRootUri() + "api/admin/users-admin/phone/" + userBuilder.getPhone()))
+                .andExpect(status().isOk());
     }
 
 }

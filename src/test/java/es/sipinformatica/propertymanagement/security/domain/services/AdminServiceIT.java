@@ -36,14 +36,14 @@ class AdminServiceIT {
                 this.roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
                 this.roles.add(Role.builder().name(ERole.ROLE_CUSTOMER).build());
 
-                this.userBuilderCreate = User.builder().email("emailCreateTest@sip.es").username("   ")
-                                .phone("phoneCreateTest").dni("dniCreateTest").password("password").roles(roles)
+                this.userBuilderCreate = User.builder().email("adminServiceemailCreateTest@sip.es").username("   ")
+                                .phone("adminServicephoneCreateTest").dni("adminServicedniCreateTest").password("password").roles(roles)
                                 .isEnabled(false).build();
-                this.userBuilder = User.builder().username("usernameRoles").email("emailTest@sip.es").phone("phoneTest")
-                                .dni("dniTest").password("password").roles(roles).build();
+                this.userBuilder = User.builder().username("adminServiceusernameRoles").email("adminServiceemailTest@sip.es").phone("adminServicephoneTest")
+                                .dni("adminServicedniTest").password("password").roles(roles).build();
         }
 
-      /*  @Test
+       @Test
         void shouldMapRoles() {
                 Set<String> rolesString = new HashSet<>();
                 userBuilder.getRoles().clear();
@@ -71,16 +71,16 @@ class AdminServiceIT {
                 Set<String> rolesString = new HashSet<>();
                 rolesString.add("ROLE_ADMIN");
                 adminService.create(userBuilderCreate, rolesString);
-                User userTest = userRepository.findByEmail("emailCreateTest@sip.es").orElseThrow();
+                User userTest = userRepository.findByEmail("adminServiceemailCreateTest@sip.es").orElseThrow();
                 Set<String> roles = userTest.getRoles().stream().map(Role::getName).map(ERole::name)
                                 .collect(Collectors.toSet());
 
                 assertTrue(roles.contains("ROLE_ADMIN"));
-                assertTrue(userTest.getUsername().contentEquals("emailCreateTest@sip.es"));
+                assertTrue(userTest.getUsername().contentEquals("adminServiceemailCreateTest@sip.es"));
                 assertTrue(userTest.getIsAccountNonLocked());
                 assertFalse(userTest.getIsEnabled());
 
                 userRepository.delete(userTest);
-        }*/
+        }
 
 }

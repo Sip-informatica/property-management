@@ -34,7 +34,7 @@ public class AdminService {
         return this.userRepository.findAll().stream();
     }
 
-    public void create(User user, Set<String> roles) {             
+    public void create(User user, Set<String> roles) {
         this.mapRoles(user, roles);
         this.checkMobile(user.getPhone());
         this.checkEmail(user.getEmail());
@@ -42,10 +42,10 @@ public class AdminService {
         this.checkUsername(user.getUsername());
         this.fillUsername(user);
         this.checkIsBoleanAccount(user);
-        user.setFirstAccess(LocalDateTime.now()); 
+        user.setFirstAccess(LocalDateTime.now());
         user.setLastAccess(LocalDateTime.now());
         userRepository.save(user);
-    }   
+    }
 
     public User mapRoles(User user, Set<String> roles) {
         Set<String> eRoleValue = Stream.of(ERole.values()).map(ERole::name).collect(Collectors.toSet());
@@ -78,7 +78,16 @@ public class AdminService {
     public void updateByMobile(String mobile, User user) {
         User oldUser = this.userRepository.findByPhone(mobile)
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
-        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        if (!user.getEmail().equals(oldUser.getEmail())) {
+            this.checkEmail(user.getEmail());
+        }
+        if (!user.getDni().equals(oldUser.getDni())) {
+            this.checkDni(user.getDni());
+        }
+        if (!user.getUsername().equals(oldUser.getUsername())) {
+            this.checkUsername(user.getUsername());
+        }
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess", "phone");
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
@@ -104,7 +113,17 @@ public class AdminService {
     public void updateByEmail(String email, User user) {
         User oldUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("The email don't exist: " + email));
-        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        if (!user.getPhone().equals(oldUser.getPhone())) {
+            this.checkMobile(user.getPhone());
+        }
+        if (!user.getDni().equals(oldUser.getDni())) {
+            this.checkDni(user.getDni());
+        }
+        if (!user.getUsername().equals(oldUser.getUsername())) {
+            this.checkUsername(user.getUsername());
+        }
+
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess", "email");
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
@@ -124,7 +143,16 @@ public class AdminService {
     public void updateByDni(String dni, User user) {
         User oldUser = this.userRepository.findByDni(dni)
                 .orElseThrow(() -> new ResourceNotFoundException("The DNI don't exist: " + dni));
-        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        if (!user.getPhone().equals(oldUser.getPhone())) {
+            this.checkMobile(user.getPhone());
+        }
+        if (!user.getEmail().equals(oldUser.getEmail())) {
+            this.checkEmail(user.getEmail());
+        }
+        if (!user.getUsername().equals(oldUser.getUsername())) {
+            this.checkUsername(user.getUsername());
+        }
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess", "dni");
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
@@ -144,30 +172,39 @@ public class AdminService {
     public void updateByUsername(String username, User user) {
         User oldUser = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
-        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess");
+        BeanUtils.copyProperties(user, oldUser, "id", "password", "firstAccess", "username");
+        if (!user.getPhone().equals(oldUser.getPhone())) {
+            this.checkMobile(user.getPhone());
+        }
+        if (!user.getDni().equals(oldUser.getDni())) {
+            this.checkDni(user.getDni());
+        }
+        if (!user.getEmail().equals(oldUser.getEmail())) {
+            this.checkEmail(user.getEmail());
+        }
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }
 
     private User fillUsername(User user) {
         if (user.getUsername() == null || user.getUsername().isEmpty() || user.getUsername().trim().isEmpty()) {
-            user.setUsername(user.getEmail());            
+            user.setUsername(user.getEmail());
         }
-        return user;       
+        return user;
     }
 
     private User checkIsBoleanAccount(User user) {
         if (user.getIsAccountNonExpired() == null) {
-            user.setIsAccountNonExpired(true);           
+            user.setIsAccountNonExpired(true);
         }
         if (user.getIsAccountNonLocked() == null) {
-            user.setIsAccountNonLocked(true);           
+            user.setIsAccountNonLocked(true);
         }
         if (user.getIsCredentialsNonExpired() == null) {
-            user.setIsCredentialsNonExpired(true);           
+            user.setIsCredentialsNonExpired(true);
         }
         if (user.getIsEnabled() == null) {
-            user.setIsEnabled(true);           
+            user.setIsEnabled(true);
         }
         return user;
 

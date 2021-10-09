@@ -5,6 +5,8 @@ branches:
     - develop
     - "/^release-[0-999].[0-999]$/"
     - master
+git:
+  depth: false
 notifications:  
   email:
     recipients:

@@ -64,8 +64,7 @@ public class User {
     private Set<Role> roles = new HashSet<>();
     private String firstName;
     private String lastName;
-    @NotBlank
-    @NonNull
+    @Column(unique = true)
     private String phone;
     private String address;
     private String city;

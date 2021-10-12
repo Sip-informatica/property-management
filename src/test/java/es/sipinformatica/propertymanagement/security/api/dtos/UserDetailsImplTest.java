@@ -19,23 +19,21 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 
-
 class UserDetailsImplTest {
-    private final User user = new User(); 
+    private final User user = new User();
     Set<Role> roles = new HashSet<>();
     Role roleAdmin = new Role();
     Role roleManager = new Role();
-    Role roleCustomer = new Role(); 
-    
+    Role roleCustomer = new Role();
 
     @BeforeEach
-	void initData() {      
-       
-        roleAdmin.setName(ERole.ROLE_ADMIN);    
-        roleManager.setName(ERole.ROLE_MANAGER);    
+    void initData() {
+
+        roleAdmin.setName(ERole.ROLE_ADMIN);
+        roleManager.setName(ERole.ROLE_MANAGER);
         roles.add(roleAdmin);
         roles.add(roleManager);
-        user.setId(1L);       
+        user.setId(1L);
         user.setRoles(roles);
         user.setUsername("AdminManager");
         user.setEmail("adminmanager@sip.es");
@@ -46,22 +44,23 @@ class UserDetailsImplTest {
         user.setIsEnabled(true);
 
     }
-    
+
     @Test
-    void  rolesOfUser() {
-                 
-        assertNotNull(user);         
+    void rolesOfUser() {
+
+        assertNotNull(user);
         assertTrue(user.getRoles().contains(roleAdmin));
         assertTrue(user.getRoles().contains(roleManager));
-        assertFalse(user.getRoles().contains(roleCustomer));        
+        assertFalse(user.getRoles().contains(roleCustomer));
 
     }
+
     @Test
-	void buildUserDetailsShouldConvertFromUser() {
+    void buildUserDetailsShouldConvertFromUser() {
         List<String> expectedAuthorities = Arrays.asList("ROLE_ADMIN", "ROLE_MANAGER");
         UserDetailsImpl userDetails = UserDetailsImpl.build(user);
         final List<String> userAuthorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         assertNotNull(userDetails);
         assertEquals(userDetails.getUsername(), user.getUsername());
@@ -69,8 +68,7 @@ class UserDetailsImplTest {
         assertTrue(userDetails.getAuthorities().stream().findAny().isPresent());
         assertTrue(userAuthorities.containsAll(expectedAuthorities));
         assertEquals(userDetails.getEmail(), user.getEmail());
-        assertEquals(userDetails.getId(), user.getId());   
-        assertNotNull(userDetails.hashCode());         
+        assertEquals(userDetails.getId(), user.getId());
 
     }
 }

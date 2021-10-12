@@ -18,6 +18,7 @@ class UserTest {
         .username("usernamebuilder")
         .email("emailbuilder@sip.es")
         .password("password")
+        .phone("123456729")
         .isAccountNonExpired(true)
         .isAccountNonLocked(true)
         .isCredentialsNonExpired(true)

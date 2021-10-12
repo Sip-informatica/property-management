@@ -26,10 +26,12 @@ import es.sipinformatica.propertymanagement.security.domain.services.AdminServic
 @RequestMapping("/api/admin" + AdminResource.ADMIN)
 public class AdminResource {
     public static final String ADMIN = "/users-admin";
-    public static final String MOBILE_ID = "/phone/{mobile}";
-    public static final String EMAIL = "/email/{email}";
-    public static final String DNI = "/dni/{dni}";
+    private static final String MOBILE_ID = "/phone/{mobile}";
+    private static final String EMAIL = "/email/{email}";
+    private static final String DNI = "/dni/{dni}";
     private static final String USERNAME = "/username/{username}";
+
+    private static final String DELETED = " - User deleted successfully";
 
     private AdminService adminService;
 
@@ -48,7 +50,7 @@ public class AdminResource {
     @PostMapping()
     public ResponseEntity<Object> create(@Valid @RequestBody UserDto creationUserDto) {
         creationUserDto.doDefault();
-        Set<String> roles = creationUserDto.RolesUserDto();
+        Set<String> roles = creationUserDto.rolesUserDto();
         this.adminService.create(creationUserDto.toUser(), roles);
 
         return ResponseEntity.ok(new MessageResponse(creationUserDto.getUsername()
@@ -73,7 +75,7 @@ public class AdminResource {
     public ResponseEntity<Object> deleteByMobile(@PathVariable String mobile) {
         this.adminService.delete(this.adminService.readByMobile(mobile));
 
-        return ResponseEntity.ok(new MessageResponse(mobile + " - User deleted successfully"));
+        return ResponseEntity.ok(new MessageResponse(mobile + DELETED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -96,7 +98,7 @@ public class AdminResource {
     public ResponseEntity<Object> deleteByEmail(@PathVariable String email) {
         this.adminService.delete(this.adminService.readByEmail(email));
 
-        return ResponseEntity.ok(new MessageResponse(email + " - User deleted successfully"));
+        return ResponseEntity.ok(new MessageResponse(email + DELETED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -117,7 +119,7 @@ public class AdminResource {
     public ResponseEntity<Object> deleteByDni(@PathVariable String dni) {
         this.adminService.delete(this.adminService.readByDni(dni));
 
-        return ResponseEntity.ok(new MessageResponse(dni + " - User deleted successfully"));
+        return ResponseEntity.ok(new MessageResponse(dni + DELETED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -138,7 +140,7 @@ public class AdminResource {
     public ResponseEntity<Object> deleteByUsername(@PathVariable String username) {
         this.adminService.delete(this.adminService.readByUsername(username));
 
-        return ResponseEntity.ok(new MessageResponse(username + " - User deleted successfully"));
+        return ResponseEntity.ok(new MessageResponse(username + DELETED));
     }
 
 }

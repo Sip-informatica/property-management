@@ -32,7 +32,7 @@ import lombok.Singular;
 public class UserDto {
     @NonNull
     @NotBlank
-    private String phone;    
+    private String phone;
     private String firstName;
     private String lastName;
     @NonNull
@@ -40,7 +40,7 @@ public class UserDto {
     @Size(max = 50)
     private String email;
     private String dni;
-    private String address;    
+    private String address;
     @Size(min = 6, max = 40)
     private String password;
     private Boolean isEnabled;
@@ -50,30 +50,30 @@ public class UserDto {
     private Set<String> roles;
     @NonNull
     @NotBlank
-    @Size(min = 3, max = 20)  
+    @Size(min = 3, max = 20)
     private String username;
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
     private String city;
-    private String country;  
-    
+    private String country;
+
     public UserDto(User user) {
         String secret = "secret";
         BeanUtils.copyProperties(user, this);
 
         this.password = secret;
-        this.roles =   getRolesUser(user);       
+        this.roles = getRolesUser(user);
     }
 
     public static UserDto ofMobileFirstName(User user) {
         return UserDto.builder().phone(user.getPhone()).firstName(user.getFirstName()).username(user.getUsername())
-        .email(user.getEmail()).build();
+                .email(user.getEmail()).build();
     }
 
     public static UserDto ofUser(User user) {
 
-        Set<String> role =   getRolesUser(user);        
+        Set<String> role = getRolesUser(user);
 
         return UserDto.builder().phone(user.getPhone()).firstName(user.getFirstName()).lastName(user.getLastName())
                 .dni(user.getDni()).email(user.getEmail()).address(user.getAddress()).password("secret")
@@ -84,7 +84,7 @@ public class UserDto {
                 .country(user.getCountry()).build();
     }
 
-    public void doDefault() {                 
+    public void doDefault() {
 
         if (Objects.isNull(password)) {
             this.password = UUID.randomUUID().toString();
@@ -98,7 +98,7 @@ public class UserDto {
     }
 
     public User toUser() {
-        this.doDefault();        
+        this.doDefault();
         this.password = new BCryptPasswordEncoder().encode(this.password);
         User user = new User();
         BeanUtils.copyProperties(this, user);
@@ -106,13 +106,11 @@ public class UserDto {
         return user;
     }
 
-    public Set<String> RolesUserDto() {
-        Set<String> rolesUserDto = this.getRoles().stream().collect(Collectors.toSet());   
-        return rolesUserDto;
+    public Set<String> rolesUserDto() {
+        return this.getRoles().stream().collect(Collectors.toSet());
     }
 
-    public static  Set<String> getRolesUser(User user) {
-        Set<String> roles = user.getRoles().stream().map(Role::getName).map(ERole::name).collect(Collectors.toSet());
-        return roles;
+    public static Set<String> getRolesUser(User user) {
+        return user.getRoles().stream().map(Role::getName).map(ERole::name).collect(Collectors.toSet());
     }
 }

@@ -81,7 +81,8 @@ public class AdminResource {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(EMAIL)
     public ResponseEntity<Object> updateByEmail(@Valid @RequestBody UserDto updateUserDto, @PathVariable String email) {
-        this.adminService.updateByEmail(email, updateUserDto.toUser());
+        Set<String> roles = updateUserDto.rolesUserDto();
+        this.adminService.updateByEmail(email, updateUserDto.updateUser(), roles);
 
         return ResponseEntity.ok(new MessageResponse(email + " - User updated successfully"));
     }
@@ -104,7 +105,7 @@ public class AdminResource {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(DNI)
     public void updateByDni(@Valid @RequestBody UserDto updateUserDto, @PathVariable String dni) {
-        this.adminService.updateByEmail(dni, updateUserDto.toUser());
+        this.adminService.updateByDni(dni, updateUserDto.toUser());
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -106,6 +106,13 @@ public class UserDto {
         return user;
     }
 
+    public User updateUser() {           
+        User user = new User();
+        BeanUtils.copyProperties(this, user);
+        user.getRoles().clear();
+        return user;
+    }
+
     public Set<String> rolesUserDto() {
         return this.getRoles().stream().collect(Collectors.toSet());
     }

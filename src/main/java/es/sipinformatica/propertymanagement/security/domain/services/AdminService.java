@@ -110,7 +110,7 @@ public class AdminService {
 
     }
 
-    public void updateByEmail(String email, User user) {
+    public void updateByEmail(String email, User user, Set<String> roles) {
         User oldUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("The email don't exist: " + email));
         if (!user.getPhone().equals(oldUser.getPhone())) {
@@ -122,7 +122,7 @@ public class AdminService {
         if (!user.getUsername().equals(oldUser.getUsername())) {
             this.checkUsername(user.getUsername());
         }
-
+        this.mapRoles(user, roles);
         BeanUtils.copyProperties(user, oldUser, IGNORE_PROPERTIES);
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);

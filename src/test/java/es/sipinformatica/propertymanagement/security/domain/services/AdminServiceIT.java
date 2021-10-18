@@ -146,29 +146,30 @@ class AdminServiceIT {
         void shouldUpdateByEmail() {
 
                 createUser();
+                Set<String> rol = new HashSet<String>();
 
                 assertThrows(ResourceNotFoundException.class,
-                                () -> adminService.updateByEmail("emailNotExist@s.es", userBuilderCreate),
+                                () -> adminService.updateByEmail("emailNotExist@s.es", userBuilderCreate, rol),
                                 "The email don't exist: emailNotExist@s.es");
                 assertDoesNotThrow(() -> adminService.updateByEmail("adminServiceemailCreateTest@sip.es",
-                                userBuilderCreate));
+                                userBuilderCreate, rol));
 
                 this.userBuilderUpdate.setPhone("adminServicephoneTest");
                 assertThrows(ResourceConflictException.class, () -> adminService
-                                .updateByEmail("adminServiceemailCreateTest@sip.es", userBuilderUpdate),
+                                .updateByEmail("adminServiceemailCreateTest@sip.es", userBuilderUpdate, rol),
                                 "The mobile already exists: adminServicephoneTest");
 
                 this.userBuilderUpdate.setPhone("adminServicephoneCreateTest");
                 this.userBuilderUpdate.setDni("adminServicedniTest");
                 assertThrows(ResourceConflictException.class, () -> adminService
-                                .updateByEmail("adminServiceemailCreateTest@sip.es", userBuilderUpdate),
+                                .updateByEmail("adminServiceemailCreateTest@sip.es", userBuilderUpdate, rol),
                                 "The dni already exists: adminServicedniTest");
 
                 this.userBuilderUpdate.setDni("adminServicedniCreateTest");
                 this.userBuilderUpdate.setUsername("adminServiceusernameRoles");
                 assertThrows(ResourceConflictException.class,
                                 () -> adminService.updateByEmail("adminServiceemailCreateTest@sip.es",
-                                                userBuilderUpdate),
+                                                userBuilderUpdate, rol),
                                 "The Username already exists: adminServiceusernameRoles");
 
                 userRepository.delete(userBuilderCreate);

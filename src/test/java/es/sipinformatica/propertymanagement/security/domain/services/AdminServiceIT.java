@@ -114,27 +114,28 @@ class AdminServiceIT {
         void shouldUpdateByMobile() {
 
                 createUser();
+                Set<String> rol = new HashSet<String>();
 
                 assertThrows(ResourceNotFoundException.class,
-                                () -> adminService.updateByMobile("NoAdminServicephoneTest", userBuilderCreate),
+                                () -> adminService.updateByMobile("NoAdminServicephoneTest", userBuilderCreate, rol),
                                 "The mobile don't exist: adminServicephoneTest");
-                assertDoesNotThrow(() -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderCreate));
+                assertDoesNotThrow(() -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderCreate, rol));
 
                 this.userBuilderUpdate.setEmail("adminServiceemailTest@sip.es");
                 assertThrows(ResourceConflictException.class,
-                                () -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderUpdate),
+                                () -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderUpdate, rol),
                                 "The email already exists: adminServiceemailTest@sip.es");
 
                 this.userBuilderUpdate.setEmail("adminServiceemailCreateTest@sip.es");
                 this.userBuilderUpdate.setDni("adminServicedniTest");
                 assertThrows(ResourceConflictException.class,
-                                () -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderUpdate),
+                                () -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderUpdate, rol),
                                 "The dni already exists: adminServicedniTest");
 
                 this.userBuilderUpdate.setDni("adminServicedniCreateTest");
                 this.userBuilderUpdate.setUsername("adminServiceusernameRoles");
                 assertThrows(ResourceConflictException.class,
-                                () -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderUpdate),
+                                () -> adminService.updateByMobile("adminServicephoneCreateTest", userBuilderUpdate, rol),
                                 "The Username already exists: adminServiceusernameRoles");
 
                 userRepository.delete(userBuilderCreate);
@@ -181,27 +182,28 @@ class AdminServiceIT {
         void shouldUpdateByDni() {
 
                 createUser();
+                Set<String> rol = new HashSet<String>();
 
                 assertThrows(ResourceNotFoundException.class,
-                                () -> adminService.updateByDni("dni12345", userBuilderCreate),
+                                () -> adminService.updateByDni("dni12345", userBuilderCreate, rol),
                                 "The dni don't exist: dni12345");
-                assertDoesNotThrow(() -> adminService.updateByDni("adminServicedniCreateTest", userBuilderCreate));
+                assertDoesNotThrow(() -> adminService.updateByDni("adminServicedniCreateTest", userBuilderCreate, rol));
 
                 this.userBuilderUpdate.setPhone("adminServicephoneTest");
                 assertThrows(ResourceConflictException.class,
-                                () -> adminService.updateByDni("adminServicedniCreateTest", userBuilderUpdate),
+                                () -> adminService.updateByDni("adminServicedniCreateTest", userBuilderUpdate, rol),
                                 "The mobile already exists: adminServicephoneTest");
 
                 this.userBuilderUpdate.setPhone("adminServicephoneCreateTest");
                 this.userBuilderUpdate.setEmail("adminServiceemailTest@sip.es");
                 assertThrows(ResourceConflictException.class,
-                                () -> adminService.updateByDni("adminServicedniCreateTest", userBuilderUpdate),
+                                () -> adminService.updateByDni("adminServicedniCreateTest", userBuilderUpdate, rol),
                                 "The email already exists: adminServiceemailTest@sip.es");
 
                 this.userBuilderUpdate.setEmail("adminServiceemailCreateTest@sip.es");
                 this.userBuilderUpdate.setUsername("adminServiceusernameRoles");
                 assertThrows(ResourceConflictException.class,
-                                () -> adminService.updateByDni("adminServicedniCreateTest", userBuilderUpdate),
+                                () -> adminService.updateByDni("adminServicedniCreateTest", userBuilderUpdate, rol),
                                 "The Username already exists: adminServiceusernameRoles");
 
                 userRepository.delete(userBuilderCreate);
@@ -213,32 +215,33 @@ class AdminServiceIT {
         void shouldUpdateByUsername() {
 
                 createUser();
+                Set<String> rol = new HashSet<String>();
 
                 assertThrows(ResourceNotFoundException.class,
-                                () -> adminService.updateByUsername("UsernameNotExist", userBuilderCreate),
+                                () -> adminService.updateByUsername("UsernameNotExist", userBuilderCreate, rol),
                                 "The username don't exist: UsernameNotExist");
                 assertDoesNotThrow(() -> adminService.updateByUsername("adminServiceemailCreateTest@sip.es",
-                                userBuilderCreate));
+                                userBuilderCreate, rol));
                 assertEquals("adminServiceemailCreateTest@sip.es", userBuilderCreate.getUsername());
                 assertEquals("adminServiceemailCreateTest@sip.es", userBuilderUpdate.getUsername());
                 assertEquals("adminServicephoneCreateTest", userBuilderUpdate.getPhone());
 
                 this.userBuilderUpdate.setPhone("adminServicephoneTest");
                 assertThrows(ResourceConflictException.class, () -> adminService
-                                .updateByUsername("adminServiceemailCreateTest@sip.es", userBuilderUpdate),
+                                .updateByUsername("adminServiceemailCreateTest@sip.es", userBuilderUpdate, rol),
                                 "The mobile already exists: adminServicephoneTest");
 
                 this.userBuilderUpdate.setPhone("adminServicephoneCreateTest");
                 this.userBuilderUpdate.setDni("adminServicedniTest");
                 assertThrows(ResourceConflictException.class, () -> adminService
-                                .updateByUsername("adminServiceemailCreateTest@sip.es", userBuilderUpdate),
+                                .updateByUsername("adminServiceemailCreateTest@sip.es", userBuilderUpdate, rol),
                                 "The dni already exists: adminServicedniTest");
 
                 this.userBuilderUpdate.setDni("adminServicedniCreateTest");
                 this.userBuilderUpdate.setEmail("adminServiceemailTest@sip.es");
                 assertThrows(ResourceConflictException.class,
                                 () -> adminService.updateByUsername("adminServiceemailCreateTest@sip.es",
-                                                userBuilderUpdate),
+                                                userBuilderUpdate, rol),
                                 "The email already exists: adminServiceemailTest@sip.es");
 
                 userRepository.delete(userBuilderCreate);

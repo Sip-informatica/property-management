@@ -75,7 +75,7 @@ public class AdminService {
 
     }
 
-    public void updateByMobile(String mobile, User user) {
+    public void updateByMobile(String mobile, User user, Set<String> roles) {
         User oldUser = this.userRepository.findByPhone(mobile)
                 .orElseThrow(() -> new ResourceNotFoundException("The mobile don't exist: " + mobile));
         if (!user.getEmail().equals(oldUser.getEmail())) {
@@ -87,6 +87,7 @@ public class AdminService {
         if (!user.getUsername().equals(oldUser.getUsername())) {
             this.checkUsername(user.getUsername());
         }
+        this.mapRoles(user, roles);
         BeanUtils.copyProperties(user, oldUser, IGNORE_PROPERTIES);
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
@@ -140,7 +141,7 @@ public class AdminService {
 
     }
 
-    public void updateByDni(String dni, User user) {
+    public void updateByDni(String dni, User user, Set<String> roles) {
         User oldUser = this.userRepository.findByDni(dni)
                 .orElseThrow(() -> new ResourceNotFoundException("The DNI don't exist: " + dni));
         if (!user.getPhone().equals(oldUser.getPhone())) {
@@ -152,6 +153,7 @@ public class AdminService {
         if (!user.getUsername().equals(oldUser.getUsername())) {
             this.checkUsername(user.getUsername());
         }
+        this.mapRoles(user, roles);
         BeanUtils.copyProperties(user, oldUser, IGNORE_PROPERTIES);
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
@@ -169,7 +171,7 @@ public class AdminService {
 
     }
 
-    public void updateByUsername(String username, User user) {
+    public void updateByUsername(String username, User user, Set<String> roles) {
         User oldUser = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
         if (!user.getPhone().equals(oldUser.getPhone())) {
@@ -181,6 +183,7 @@ public class AdminService {
         if (!user.getEmail().equals(oldUser.getEmail())) {
             this.checkEmail(user.getEmail());
         }
+        this.mapRoles(user, roles);
         BeanUtils.copyProperties(user, oldUser, IGNORE_PROPERTIES);
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);

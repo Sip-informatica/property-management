@@ -59,8 +59,11 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(MOBILE_ID)
-    public void updateByMobile(@Valid @RequestBody UserDto updateUserDto, @PathVariable String mobile) {
-        this.adminService.updateByMobile(mobile, updateUserDto.toUser());
+    public ResponseEntity<Object> updateByMobile(@Valid @RequestBody UserDto updateUserDto, @PathVariable String mobile) {
+        Set<String> roles = updateUserDto.rolesUserDto();
+        this.adminService.updateByMobile(mobile, updateUserDto.updateUser(), roles);
+
+        return ResponseEntity.ok(new MessageResponse(mobile + " - User updated successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -104,8 +107,11 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(DNI)
-    public void updateByDni(@Valid @RequestBody UserDto updateUserDto, @PathVariable String dni) {
-        this.adminService.updateByDni(dni, updateUserDto.toUser());
+    public ResponseEntity<Object> updateByDni(@Valid @RequestBody UserDto updateUserDto, @PathVariable String dni) {
+        Set<String> roles = updateUserDto.rolesUserDto();
+        this.adminService.updateByDni(dni, updateUserDto.updateUser(), roles);
+
+        return ResponseEntity.ok(new MessageResponse(dni + " - User updated successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -125,8 +131,11 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(USERNAME)
-    public void updateByUsername(@Valid @RequestBody UserDto updateUserDto, @PathVariable String username) {
-        this.adminService.updateByUsername(username, updateUserDto.toUser());
+    public ResponseEntity<Object> updateByUsername(@Valid @RequestBody UserDto updateUserDto, @PathVariable String username) {
+        Set<String> roles = updateUserDto.rolesUserDto();
+        this.adminService.updateByUsername(username, updateUserDto.updateUser(), roles);
+
+        return ResponseEntity.ok(new MessageResponse(username + " - User updated successfully"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

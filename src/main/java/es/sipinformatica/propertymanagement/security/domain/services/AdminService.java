@@ -19,7 +19,7 @@ import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceN
 
 @Service
 public class AdminService {
-    private static final String[] IGNORE_PROPERTIES = {"id", "password", "firstAccess", "email"};
+    private static final String[] IGNORE_PROPERTIES = { "id", "password", "firstAccess", "email" };
 
     private UserRepository userRepository;
     @Autowired
@@ -50,8 +50,7 @@ public class AdminService {
 
     public User mapRoles(User user, Set<String> roles) {
         Set<String> eRoleValue = Stream.of(ERole.values()).map(ERole::name).collect(Collectors.toSet());
-        Set<Role> rolesOfUser = eRoleValue.stream().filter(roles::contains)
-                .map(ERole::valueOf)
+        Set<Role> rolesOfUser = eRoleValue.stream().filter(roles::contains).map(ERole::valueOf)
                 .map(role -> roleRepository.findByName(role)
                         .orElseThrow(() -> new ResourceNotFoundException(ERROR + role.name() + " Role is not found")))
                 .collect(Collectors.toSet());
@@ -173,7 +172,6 @@ public class AdminService {
     public void updateByUsername(String username, User user) {
         User oldUser = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("The username don't exist: " + username));
-        BeanUtils.copyProperties(user, oldUser, IGNORE_PROPERTIES);
         if (!user.getPhone().equals(oldUser.getPhone())) {
             this.checkMobile(user.getPhone());
         }
@@ -183,6 +181,7 @@ public class AdminService {
         if (!user.getEmail().equals(oldUser.getEmail())) {
             this.checkEmail(user.getEmail());
         }
+        BeanUtils.copyProperties(user, oldUser, IGNORE_PROPERTIES);
         oldUser.setLastAccess(LocalDateTime.now());
         this.userRepository.save(oldUser);
     }

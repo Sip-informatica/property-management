@@ -30,7 +30,7 @@ class ControllerTest {
     void allAccessTest() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.request(
             HttpMethod.GET, 
-            this.restTemplate.getRootUri() + "api/test/all"))        
+            this.restTemplate.getRootUri() + "/api/test/all"))        
         .andExpect(status().isOk())
         .andExpect(content().string("Public Content."));
               
@@ -41,7 +41,7 @@ class ControllerTest {
     void adminmanager() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(
             HttpMethod.GET, 
-            this.restTemplate.getRootUri() + "api/test/adminmanager"))        
+            this.restTemplate.getRootUri() + "/api/test/adminmanager"))        
         .andExpect(status().isOk())
         .andExpect(content().string("AdminManager Board."));
               
@@ -52,7 +52,7 @@ class ControllerTest {
     void manager() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.request(
             HttpMethod.GET, 
-            this.restTemplate.getRootUri() + "api/test/manager"))        
+            this.restTemplate.getRootUri() + "/api/test/manager"))        
         .andExpect(status().isForbidden());              
     }
     

@@ -1,5 +1,6 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -25,48 +26,39 @@ class AuthenticationControllerIT {
     private WebTestClient webTestClient;
     @Autowired
     private UserRepository userRepository;
-   
+
+    @BeforeEach
+    private void userSignupRequestInit() {
+        userSignupRequest = UserSignupRequest.builder().username("username").dni("dni").email("email@sip.es")
+                .password("password").phone("phone").build();
+    }
+
     @Test
     void shouldGetSigin() {
-        loginRequest = LoginRequest.builder()
-        .username("admin")
-        .password("passAdmin")
-        .build();
+        loginRequest = LoginRequest.builder().username("admin").password("passAdmin").build();
 
-        this.webTestClient.post()
-        .uri(API + SIGNIN)
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(loginRequest)
-        .exchange()
-        .expectStatus().isOk()
-        .expectBody().jsonPath("token").exists();
+        this.webTestClient.post().uri(API + SIGNIN).contentType(MediaType.APPLICATION_JSON).bodyValue(loginRequest)
+                .exchange().expectStatus().isOk().expectBody().jsonPath("token").exists();
     }
 
     @Test
     void shouldRegisterUser() {
-        userSignupRequest = new UserSignupRequest("username", "email@sip.es", "password");
 
-        this.webTestClient.post()
-        .uri(API + SIGNUP)
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(userSignupRequest)
-        .exchange().expectStatus().isOk()
-        .expectBody().jsonPath("message").exists();
+        this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
+                .exchange().expectStatus().isOk().expectBody().jsonPath("message").exists();
 
         User userTest = userRepository.findByUsername("username").orElseThrow();
         userRepository.delete(userTest);
     }
+
     @Test
     void shouldRegisterUserConflict() {
-        userSignupRequest = new UserSignupRequest("AdminManager", "adminmanager@sip.es", "password");
+        userSignupRequest.setUsername("AdminManager");
+        userSignupRequest.setEmail("adminmanager@sip.es");
+        userSignupRequest.setPassword("password");
 
-        this.webTestClient.post()
-        .uri(API + SIGNUP)
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(userSignupRequest)
-        .exchange().expectStatus().is4xxClientError()
-        .expectBody().jsonPath("message", "Conflict Exception ");        
+        this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
+                .exchange().expectStatus().is4xxClientError().expectBody().jsonPath("message", "Conflict Exception ");
     }
 
-        
 }

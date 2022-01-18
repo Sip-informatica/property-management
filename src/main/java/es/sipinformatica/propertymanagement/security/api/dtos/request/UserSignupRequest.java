@@ -1,15 +1,19 @@
 package es.sipinformatica.propertymanagement.security.api.dtos.request;
 
-import java.util.Set;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class UserSignupRequest {
     @NonNull
     @NotBlank
@@ -24,6 +28,10 @@ public class UserSignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)    
     private String password;
-	private Set<String> roles;	
+    private String dni;
+    @NonNull
+    @NotBlank
+    private String phone;
+	
 
 }

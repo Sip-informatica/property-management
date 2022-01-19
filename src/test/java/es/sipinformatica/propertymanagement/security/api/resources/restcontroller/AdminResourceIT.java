@@ -66,14 +66,14 @@ class AdminResourceIT {
     @WithMockUser(roles = "ADMIN")
     void readAllTest() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET,
-                this.restTemplate.getRootUri() + "api/admin/users-admin")).andExpect(status().isOk());
+                this.restTemplate.getRootUri() + "/api/admin/users-admin")).andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "MANAGER")
     void readAllForbiddenTest() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.GET,
-                this.restTemplate.getRootUri() + "api/admin/users-admin")).andExpect(status().isForbidden());
+                this.restTemplate.getRootUri() + "/api/admin/users-admin")).andExpect(status().isForbidden());
     }
 
     @Test
@@ -81,7 +81,7 @@ class AdminResourceIT {
     void readUserByEmailTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.request(HttpMethod.GET,
-                        this.restTemplate.getRootUri() + "api/admin/users-admin/email/q@q.es"))
+                        this.restTemplate.getRootUri() + "/api/admin/users-admin/email/q@q.es"))
                 .andExpect(status().isNotFound()).andExpect(jsonPath("$.status").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.errors").value("The email don't exist: q@q.es"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
@@ -92,7 +92,7 @@ class AdminResourceIT {
     void shouldCreate() throws Exception {
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+                .perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "/api/admin/users-admin")
                         .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.message").hasJsonPath());
 
@@ -103,18 +103,18 @@ class AdminResourceIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldReadUpdateDeleteByEmail() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "/api/admin/users-admin")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get(this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail()))
+                        .get(this.restTemplate.getRootUri() + "/api/admin/users-admin/email/" + userBuilder.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("emailTest@sip.es"));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .put(this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail())
+                        .put(this.restTemplate.getRootUri() + "/api/admin/users-admin/email/" + userBuilder.getEmail())
                         .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilderCreate)))
                 .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.message")
                         .value("emailTest@sip.es - User updated successfully"));
@@ -123,14 +123,14 @@ class AdminResourceIT {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .put(this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail())
+                        .put(this.restTemplate.getRootUri() + "/api/admin/users-admin/email/" + userBuilder.getEmail())
                         .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilderCreate)))
                 .andExpect(status().isConflict()).andExpect(MockMvcResultMatchers.jsonPath("$.errors")
                         .value("The Username already exists: manager"));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.delete(
-                        this.restTemplate.getRootUri() + "api/admin/users-admin/email/" + userBuilder.getEmail()))
+                        this.restTemplate.getRootUri() + "/api/admin/users-admin/email/" + userBuilder.getEmail()))
                 .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.message")
                         .value("emailTest@sip.es - User deleted successfully"));
     }
@@ -138,36 +138,36 @@ class AdminResourceIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldDeleteByDni() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "/api/admin/users-admin")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .delete(this.restTemplate.getRootUri() + "api/admin/users-admin/dni/" + userBuilder.getDni()))
+                        .delete(this.restTemplate.getRootUri() + "/api/admin/users-admin/dni/" + userBuilder.getDni()))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldDeleteByUsername() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "/api/admin/users-admin")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.delete(
-                        this.restTemplate.getRootUri() + "api/admin/users-admin/username/" + userBuilder.getUsername()))
+                        this.restTemplate.getRootUri() + "/api/admin/users-admin/username/" + userBuilder.getUsername()))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldDeleteByPhone() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "api/admin/users-admin")
+        this.mockMvc.perform(MockMvcRequestBuilders.post(this.restTemplate.getRootUri() + "/api/admin/users-admin")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(userBuilder)));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.delete(
-                        this.restTemplate.getRootUri() + "api/admin/users-admin/phone/" + userBuilder.getPhone()))
+                        this.restTemplate.getRootUri() + "/api/admin/users-admin/phone/" + userBuilder.getPhone()))
                 .andExpect(status().isOk());
     }
 

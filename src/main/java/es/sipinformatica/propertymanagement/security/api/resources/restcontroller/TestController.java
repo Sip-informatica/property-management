@@ -54,7 +54,7 @@ public class TestController {
 		return "Admin Board.";
 	}
 	
-	@GetMapping(EXCEPTIONS + "/" + ID_ID)
+	@GetMapping(EXCEPTIONS + ID_ID)
 	public void read(@PathVariable int id) throws Exception {
 		if (id < 1){
 			throw new ResourceNotFoundException("id: " + id);			

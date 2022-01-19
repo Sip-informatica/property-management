@@ -103,10 +103,17 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		<!-- JSON -->
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>			
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+		<!-- HikariCP -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>5.0.1</version>
 		</dependency>
 	</dependencies>
 

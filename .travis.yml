@@ -15,6 +15,8 @@ install:
   - mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
   - mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=sip-informatica -Dsonar.login=$SONAR -Dsonar.coverage.exclusions="**/api/**, **/configurations/**"
+before_deploy:
+  - rvm $(travis_internal_ruby) --fuzzy do ruby -S gem install faraday -v 1.9.3
 deploy:
   provider: heroku
   api_key: $HEROKU  

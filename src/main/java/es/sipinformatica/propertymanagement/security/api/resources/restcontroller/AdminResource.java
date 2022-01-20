@@ -32,6 +32,7 @@ public class AdminResource {
     private static final String USERNAME = "/username/{username}";
 
     private static final String DELETED = " - User deleted successfully";
+    private static final String UPDATED = " - User updated successfully";
 
     private AdminService adminService;
 
@@ -63,7 +64,7 @@ public class AdminResource {
         Set<String> roles = updateUserDto.rolesUserDto();
         this.adminService.updateByMobile(mobile, updateUserDto.updateUser(), roles);
 
-        return ResponseEntity.ok(new MessageResponse(mobile + " - User updated successfully"));
+        return ResponseEntity.ok(new MessageResponse(mobile + UPDATED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -87,7 +88,7 @@ public class AdminResource {
         Set<String> roles = updateUserDto.rolesUserDto();
         this.adminService.updateByEmail(email, updateUserDto.updateUser(), roles);
 
-        return ResponseEntity.ok(new MessageResponse(email + " - User updated successfully"));
+        return ResponseEntity.ok(new MessageResponse(email + UPDATED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -111,7 +112,7 @@ public class AdminResource {
         Set<String> roles = updateUserDto.rolesUserDto();
         this.adminService.updateByDni(dni, updateUserDto.updateUser(), roles);
 
-        return ResponseEntity.ok(new MessageResponse(dni + " - User updated successfully"));
+        return ResponseEntity.ok(new MessageResponse(dni + UPDATED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -135,7 +136,7 @@ public class AdminResource {
         Set<String> roles = updateUserDto.rolesUserDto();
         this.adminService.updateByUsername(username, updateUserDto.updateUser(), roles);
 
-        return ResponseEntity.ok(new MessageResponse(username + " - User updated successfully"));
+        return ResponseEntity.ok(new MessageResponse(username + UPDATED));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

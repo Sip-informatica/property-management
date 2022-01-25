@@ -9,8 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtResponse {
 
-    private String token;       
-    private Long id;
+    private String token;  
     private String username;
     private String email;
     private List<String> roles;

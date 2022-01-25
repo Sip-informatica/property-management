@@ -65,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         WebRequest request) {
         
 		List<String> detailsError = new ArrayList<>();
-        detailsError.add(ex.getMessage());
+        detailsError.add(ex.getMessage().split(":", 2)[0]);
         
         ApiErrorMessage err = new ApiErrorMessage(
             LocalDateTime.now(),
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .getBindingResult()
 				.getFieldErrors()
 				.stream()
-				.map(error -> error.getObjectName() + " : " + error.getDefaultMessage())
+				.map(error -> error.getField() + " : " + error.getDefaultMessage())
 				.collect(Collectors.toList());
 		
 		ApiErrorMessage err = new ApiErrorMessage(

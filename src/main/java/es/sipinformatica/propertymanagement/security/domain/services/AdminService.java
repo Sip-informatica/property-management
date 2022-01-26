@@ -15,6 +15,7 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
+import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceForbiddenException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
 
 @Service
@@ -130,6 +131,7 @@ public class AdminService {
     }
 
     private void checkDni(String dni) {
+        UtilService.validateNieNifNifBusiness(dni);
         if (Boolean.TRUE.equals(this.userRepository.existsByDni(dni))) {
             throw new ResourceConflictException("The dni already exists: " + dni);
         }

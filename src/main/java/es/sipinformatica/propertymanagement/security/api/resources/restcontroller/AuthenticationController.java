@@ -65,8 +65,7 @@ public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest 
         .collect(Collectors.toList());
     
     JwtResponse jwtResponse = new JwtResponse(
-    jwtToken, 
-    //userDetails.getId(),
+    jwtToken,    
     userDetails.getUsername(),
     userDetails.getEmail(),
     roles);    

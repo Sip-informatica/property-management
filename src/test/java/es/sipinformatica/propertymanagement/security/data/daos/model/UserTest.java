@@ -1,5 +1,6 @@
 package es.sipinformatica.propertymanagement.security.data.daos.model;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,14 +22,13 @@ class UserTest {
         .phone("123456729")
         .isAccountNonExpired(true)
         .isAccountNonLocked(true)
-        .isCredentialsNonExpired(true)
-        .isEnabled(true)
+        .isCredentialsNonExpired(true)        
         .build();
     }
     
     @Test
     void shouldGetUsername(){
-        assertTrue(user.getUsername().contentEquals("username"));
+        assertTrue(user.getUsername().contentEquals("username"));        
     }
     @Test
     void shouldGetEmail(){
@@ -40,12 +40,12 @@ class UserTest {
         assertTrue(user.getIsAccountNonExpired());
         assertTrue(user.getIsAccountNonLocked());
         assertTrue(user.getIsCredentialsNonExpired());
-        assertTrue(user.getIsEnabled());
+        assertFalse(user.getIsEnabled());
     }
 
     @Test
     void shouldNewUserBuilder(){
         assertTrue(userBuilder.getUsername().contentEquals("usernamebuilder"));
-        assertTrue(userBuilder.getIsEnabled());
+        assertFalse(userBuilder.getIsEnabled());
     }
 }

@@ -1,6 +1,7 @@
 package es.sipinformatica.propertymanagement.security.api.dtos;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,7 +26,7 @@ class UserDtoTest {
         roles.add(Role.builder().name(ERole.ROLE_MANAGER).build());
 
         user = User.builder().phone("666777888").roles(roles).dni("44444444Q").email("email@sip.es")
-                .username("User-name").password("password").firstName("First-Name").build();
+                .username("User-Name").password("password").firstName("First-Name").build();
     }
 
     @Test
@@ -58,7 +59,7 @@ class UserDtoTest {
 
         assertEquals("secret", userDto.getPassword());
         assertEquals("[ROLE_MANAGER, ROLE_ADMIN]", userDto.getRoles().toString());
-        assertTrue(userDto.getIsEnabled());
+        assertFalse(userDto.getIsEnabled());
     }
 
     @Test
@@ -70,7 +71,7 @@ class UserDtoTest {
         assertEquals(2, roles.size());
         assertTrue(roles.contains("ROLE_ADMIN") && roles.contains("ROLE_MANAGER"));
         assertEquals("First-Name", userDto.getFirstName());
-        assertTrue(userDto.toUser().getIsEnabled());
-    }
+        assertFalse(userDto.toUser().getIsEnabled());
+    }  
 
 }

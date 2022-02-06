@@ -15,7 +15,6 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
-import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceForbiddenException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
 
 @Service

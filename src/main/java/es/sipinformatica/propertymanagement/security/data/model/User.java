@@ -16,6 +16,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,37 +33,40 @@ import lombok.NonNull;
 @Entity
 @Table(name = "users")
 public class User {
-    // digit + lowercase char + uppercase char + punctuation + symbol
-    /*@Transient 
-    private static final String PASSWORD_PATTERN =
-            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";*/
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;   
+    private Long id;
     @Column(unique = true)
-    private String dni;        
+    private String dni;
     @Column(unique = true)
     private String username;
     @NotBlank
     @NonNull
-    //@Pattern(regexp = PASSWORD_PATTERN)
-    private String password;    
+    private String password;
     @NotBlank
     @NonNull
     @Email
     @Column(unique = true, nullable = false)
-    private String email;     
+    private String email;
+    @Size(max = 20)
+    @JsonIgnore
+    private String activationKey;
+
+    @Size(max = 20)
+    @Column(name = "reset_key", length = 20)
+    @JsonIgnore
+    private String resetKey;
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
-    private Boolean isEnabled;       
+    @NonNull
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isEnabled = false;
     @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-         name = "user_roles",
-         joinColumns = @JoinColumn( name = "user_id" ),
-         inverseJoinColumns = @JoinColumn( name= "role_id" ))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
     private String firstName;
     private String lastName;
@@ -70,18 +76,16 @@ public class User {
     private String city;
     private String country;
     private LocalDateTime firstAccess;
-    private LocalDateTime lastAccess;    
-    
+    private LocalDateTime lastAccess;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
 
         this.isAccountNonExpired = true;
-		this.isAccountNonLocked = true;
-		this.isCredentialsNonExpired = true;
-		this.isEnabled = true;       
+        this.isAccountNonLocked = true;
+        this.isCredentialsNonExpired = true;
+        this.isEnabled = false;
     }
-
-
 }

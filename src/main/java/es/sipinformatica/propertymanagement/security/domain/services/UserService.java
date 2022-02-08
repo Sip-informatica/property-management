@@ -1,6 +1,8 @@
 package es.sipinformatica.propertymanagement.security.domain.services;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -39,11 +41,24 @@ public class UserService {
                 .password(passwordEncoder.encode(userSignupRequest.getPassword()))
                 .dni(userSignupRequest.getDni().toUpperCase())
                 .phone(userSignupRequest.getPhone()).roles(rol).isEnabled(false)
-                .activationKey(RandomStringUtils.randomAlphanumeric(20))
+                .activationKey(RandomStringUtils.randomAlphanumeric(20)).firstAccess(LocalDateTime.now())
                 .build();
         userRepository.save(newUser);
 
         return newUser;
+    }
+
+    public Optional<User> activateUser(String token) {
+        return userRepository.findByActivationKey(token)
+                .map(user -> {
+                    user.setActivationKey(null);
+                    user.setIsEnabled(true);
+                    user.setIsAccountNonExpired(true);
+                    user.setIsAccountNonLocked(true);
+                    user.setIsCredentialsNonExpired(true);
+                    userRepository.save(user);
+                    return user;
+                });
     }
 
 }

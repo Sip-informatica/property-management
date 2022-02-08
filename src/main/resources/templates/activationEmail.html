@@ -7,19 +7,19 @@
     </head>
     <body>
         <p th:text="#{email.activation.greeting(${user.username})}">
-            Dear
+            Estimado 
         </p>
         <p th:text="#{email.activation.text1}">
-            Your JHipster account has been created, please click on the URL below to activate it:
+            Su cuenta de usuario ha sido creada, por favor, haga clic en el enlace de abajo para activarla:
         </p>
         <p>
-            <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}"
-               th:text="@{|${baseUrl}/#/activate?key=${user.activationKey}|}">Activation Link</a>
+            <a th:href="@{|${baseUrl}/activate/${user.activationKey}|}"
+               th:text="@{|${baseUrl}/activate/${user.activationKey}|}">Link de activación</a>
         </p>
         <p>
-            <span th:text="#{email.activation.text2}">Regards, </span>
+            <span th:text="#{email.activation.text2}">Saludos, </span>
             <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
+            <em th:text="#{email.signature}">sip-informatica.es</em>
         </p>
     </body>
 </html>

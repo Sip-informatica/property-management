@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
@@ -24,16 +23,16 @@ public class MailServiceTest {
     private MailService mailService;
 
     private User userBuilder;
-    Set<Role> roles = new HashSet<>();    
+    Set<Role> roles = new HashSet<>();   
 
     @BeforeEach
     void userInit() {
         this.roles.add(Role.builder().name(ERole.ROLE_ADMIN).build());
-        this.roles.add(Role.builder().name(ERole.ROLE_CUSTOMER).build());       
+        this.roles.add(Role.builder().name(ERole.ROLE_CUSTOMER).build());
         this.userBuilder = User.builder().username("TestEmail")
                 .email("garcia.romero.candido@gmail.com").phone("adminServicephoneTest")
                 .dni("A08001851").password("password").roles(roles)
-                .activationKey(RandomStringUtils.randomAlphanumeric(20)).build();        
+                .activationKey(RandomStringUtils.randomAlphanumeric(20)).build();
     }
 
     @Test
@@ -47,8 +46,8 @@ public class MailServiceTest {
     }
 
     @Test
-    public void shouldSendActivationEmail() throws MessagingException {
-        
-        mailService.sendActivationEmail(userBuilder);
+    public void shouldSendActivationEmail() throws MessagingException {       
+       
+        mailService.sendActivationEmail(userBuilder,  "http://localhost:8080/api");
     }
 }

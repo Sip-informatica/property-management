@@ -23,9 +23,7 @@ public class MailService {
 
     private static final String BASEURL = "baseUrl";
     @Value("${spring.mail.username}")
-    private String from = "";
-    // noreply@sip-informatica.com
-
+    private String from = "";   
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
@@ -34,15 +32,15 @@ public class MailService {
     private MessageSource messageSource;
 
     @Async
-    public void sendActivationEmail(User user) throws MessagingException {
-        sendEmailFromTemplate(user, "activationEmail", "email.activation.subject");
+    public void sendActivationEmail(User user, String siteUrl) throws MessagingException {
+        sendEmailFromTemplate(user, "activationEmail", siteUrl, "email.activation.subject");
     }
 
     @Async
-    public void sendEmailFromTemplate(User user, String templateName, String titleKey) throws MessagingException {
+    public void sendEmailFromTemplate(User user, String templateName, String siteUrl, String titleKey ) throws MessagingException {
         Context context = new Context();
         context.setVariable(USER, user);
-        context.setVariable(BASEURL, "value");
+        context.setVariable(BASEURL, siteUrl);
         String content = templateEngine.process(templateName, context);
         String subject = messageSource.getMessage(titleKey, null, LocaleContextHolder.getLocale());
         sendEmail(user.getEmail(), subject, content, false, true);

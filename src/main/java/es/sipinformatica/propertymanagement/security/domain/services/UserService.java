@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +31,13 @@ public class UserService {
     UserRepository userRepository;
 
     public User registerUser(UserSignupRequest userSignupRequest) {
+
+        deleteExpiredUsers(userSignupRequest);        
         Set<Role> rol = new HashSet<>();
         Role role = roleRepository.findByName(ERole.ROLE_MANAGER)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(ERROR + ERole.ROLE_MANAGER.name() + " Role is not found"));
+                        () -> new ResourceNotFoundException(
+                                ERROR + ERole.ROLE_MANAGER.name() + " Role is not found"));
         rol.add(role);
         User newUser = User.builder()
                 .username(userSignupRequest.getUsername().toLowerCase())
@@ -43,9 +47,23 @@ public class UserService {
                 .phone(userSignupRequest.getPhone()).roles(rol).isEnabled(false)
                 .activationKey(RandomStringUtils.randomAlphanumeric(20)).firstAccess(LocalDateTime.now())
                 .build();
+
         userRepository.save(newUser);
 
         return newUser;
+
+    }
+
+    private void deleteExpiredUsers(UserSignupRequest userSignupRequest) {
+        User findDeleteUser = userRepository.findAll().stream()
+                .filter(user -> user.getUsername().equals(userSignupRequest.getUsername())
+                        || user.getEmail().equals(userSignupRequest.getEmail())
+                        || user.getDni().equals(userSignupRequest.getDni())
+                        || user.getPhone().equals(userSignupRequest.getPhone()))
+                .findFirst().orElse(null);
+        if (findDeleteUser != null) {
+            userRepository.delete(findDeleteUser);
+        }
     }
 
     public Optional<User> activateUser(String token) {
@@ -59,6 +77,16 @@ public class UserService {
                     userRepository.save(user);
                     return user;
                 });
+    }
+
+    @Scheduled(cron = "@weekly")
+    public void deleteExpiredUsers() {
+        System.out.println("Tarea usando expresiones cron - " + LocalDateTime.now());
+        userRepository.findAll().forEach(user -> {
+            if (user.getActivationKey() != null) {
+                userRepository.delete(user);
+            }
+        });
     }
 
 }

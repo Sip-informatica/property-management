@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -48,7 +49,7 @@ public class MailService {
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml)
-            throws MessagingException {
+            throws MessagingException, MailException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, "UTF-8");
@@ -60,7 +61,7 @@ public class MailService {
     }
 
     @Async
-    public void sendSimpleEmail(String to, String subject, String content) {
+    public void sendSimpleEmail(String to, String subject, String content) throws MailException, MessagingException {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setFrom(from);

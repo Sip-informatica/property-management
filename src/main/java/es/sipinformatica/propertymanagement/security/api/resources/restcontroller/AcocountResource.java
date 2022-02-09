@@ -23,6 +23,7 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
 import es.sipinformatica.propertymanagement.security.domain.services.MailService;
 import es.sipinformatica.propertymanagement.security.domain.services.UserService;
+import es.sipinformatica.propertymanagement.security.domain.services.UtilService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,23 +43,24 @@ public class AcocountResource {
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody UserSignupRequest userSignupRequest,
             HttpServletRequest request)
             throws MessagingException {
-        userRepository.findByUsername(userSignupRequest.getUsername())
+        userRepository.findByUsernameAndActivationKey(userSignupRequest.getUsername(), null)
                 .ifPresent(user -> {
                     throw new ResourceConflictException(ERROR + "User already exists");
                 });
-        userRepository.findByEmail(userSignupRequest.getEmail())
+        userRepository.findByEmailAndActivationKey(userSignupRequest.getEmail(), null)
                 .ifPresent(user -> {
                     throw new ResourceConflictException(ERROR + "Email already exists");
                 });
-        userRepository.findByPhone(userSignupRequest.getPhone())
+        userRepository.findByPhoneAndActivationKey(userSignupRequest.getPhone(), null)
                 .ifPresent(user -> {
                     throw new ResourceConflictException(ERROR + "Phone already exists");
                 });
-        userRepository.findByDni(userSignupRequest.getDni()).ifPresent(user -> {
+        userRepository.findByDniAndActivationKey(userSignupRequest.getDni(), null).ifPresent(user -> {
             throw new ResourceConflictException(ERROR + "NIF already exists");
         });
+        UtilService.validateNieNifNifBusiness(userSignupRequest.getDni());
         User user = userService.registerUser(userSignupRequest);
-        mailService.sendActivationEmail(user, request.getRequestURL().toString());        
+        mailService.sendActivationEmail(user, request.getRequestURL().toString());
         return ResponseEntity.ok(new MessageResponse(userSignupRequest.getUsername() + " registered successfully"));
 
     }

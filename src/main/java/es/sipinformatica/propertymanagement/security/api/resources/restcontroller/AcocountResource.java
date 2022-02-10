@@ -58,7 +58,7 @@ public class AcocountResource {
         userRepository.findByDniAndActivationKey(userSignupRequest.getDni(), null).ifPresent(user -> {
             throw new ResourceConflictException(ERROR + "NIF already exists");
         });
-        UtilService.validateNieNifNifBusiness(userSignupRequest.getDni());
+        //UtilService.validateNieNifNifBusiness(userSignupRequest.getDni());
         User user = userService.registerUser(userSignupRequest);
         mailService.sendActivationEmail(user, request.getRequestURL().toString());
         return ResponseEntity.ok(new MessageResponse(userSignupRequest.getUsername() + " registered successfully"));

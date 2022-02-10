@@ -119,8 +119,8 @@ content-Type: application/json
     "username": "UserTest",   
     "password": "1passAdminManager", 
     "phone": "194578459",
-    "email": "@gmail.com",
-    "dni": "68371422N"     
+    "email": "garcia@gmail.com",
+    "dni": "6837142N"     
 }
 ###
 

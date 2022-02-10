@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import es.sipinformatica.propertymanagement.security.api.dtos.validator.ValidateNieNifNifBusiness;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class UserSignupRequest {
     @Size(min = 6, max = 40)
     @Pattern(regexp = PASSWORD_PATTERN)
     private String password;
+    @ValidateNieNifNifBusiness
     private String dni;
     @NonNull
     @NotBlank

@@ -97,8 +97,8 @@ public class UtilService {
 
     public static boolean validateNieNifNifBusiness(String dni) {
         if (Boolean.FALSE.equals(UtilService.validateNIF(dni)) && Boolean.FALSE.equals(UtilService.validateNIE(dni))
-                && Boolean.FALSE.equals(UtilService.validateNifBusiness(dni))) {
-            throw new ResourceForbiddenException("Invalid format for the NIF: " + dni);
+                && Boolean.FALSE.equals(UtilService.validateNifBusiness(dni))) {            
+            return false;
         }
         return true;
 

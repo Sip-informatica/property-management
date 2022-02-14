@@ -66,6 +66,16 @@ public class UserService {
         }
     }
 
+    public User findUser(String login) {
+        User findUser = userRepository.findAll().stream()
+                .filter(user -> user.getUsername().equals(login)
+                        || user.getEmail().equals(login)
+                        || user.getDni().equals(login)
+                        || user.getPhone().equals(login))
+                .findFirst().orElse(null);
+        return findUser;
+    }
+
     public Optional<User> activateUser(String token) {
         return userRepository.findByActivationKey(token)
                 .map(user -> {
@@ -87,6 +97,6 @@ public class UserService {
                 userRepository.delete(user);
             }
         });
-    }
+    }   
 
 }

@@ -14,6 +14,11 @@ public class NieNifNifBusinessValidator implements ConstraintValidator<ValidateN
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {       
+        if (value == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("{validate.nie.nif.nif.business.null}").addConstraintViolation();
+            return false;           
+        }
         return UtilService.validateNieNifNifBusiness(value);
 
     }

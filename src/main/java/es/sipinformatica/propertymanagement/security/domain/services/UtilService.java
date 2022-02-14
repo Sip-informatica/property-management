@@ -5,8 +5,6 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
-import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceForbiddenException;
-
 @Service
 public class UtilService {
 

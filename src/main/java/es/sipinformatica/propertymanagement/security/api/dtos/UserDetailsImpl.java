@@ -2,7 +2,6 @@ package es.sipinformatica.propertymanagement.security.api.dtos;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,9 +14,11 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 public class UserDetailsImpl implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	private Long id;
+
 	private String username;
 	private String email;
+	private String phone;
+	private String dni;
 	@JsonIgnore
 	private String password;
 	private Collection<? extends GrantedAuthority> authorities;
@@ -26,46 +27,45 @@ public class UserDetailsImpl implements UserDetails {
 	private Boolean isCredentialsNonExpired;
 	private Boolean isEnabled;
 
-	public UserDetailsImpl(Long id, String username,String email,String password,
+	public UserDetailsImpl(String username, String email, String phone, String dni, String password,
 			Boolean isAccountNonExpired, Boolean isAccountNonLocked, Boolean isCredentialsNonExpired,
 			Boolean isEnabled, List<GrantedAuthority> authorities) {
-				this.id = id;
-				this.username = username;
-				this.email = email;
-				this.password = password;
-				this.isAccountNonExpired = isAccountNonExpired;
-				this.isAccountNonLocked = isAccountNonLocked;
-				this.isCredentialsNonExpired = isCredentialsNonExpired;
-				this.isEnabled = isEnabled;
-				this.authorities = authorities;
+
+		this.username = username;
+		this.email = email;
+		this.phone = phone;
+		this.dni = dni;
+		this.password = password;
+		this.isAccountNonExpired = isAccountNonExpired;
+		this.isAccountNonLocked = isAccountNonLocked;
+		this.isCredentialsNonExpired = isCredentialsNonExpired;
+		this.isEnabled = isEnabled;
+		this.authorities = authorities;
 
 	}
 
 	public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-            .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-            .collect(Collectors.toList());
+		List<GrantedAuthority> authorities = user.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.collect(Collectors.toList());
 
-        return new UserDetailsImpl(
-            user.getId(),
-            user.getUsername(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getIsAccountNonExpired(),
-            user.getIsAccountNonLocked(),
-            user.getIsCredentialsNonExpired(),
-            user.getIsEnabled(),
-            authorities
-        );
-    }
+		return new UserDetailsImpl(
 
-    @Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+				user.getUsername(),
+				user.getEmail(),
+				user.getPhone(),
+				user.getDni(),
+				user.getPassword(),
+				user.getIsAccountNonExpired(),
+				user.getIsAccountNonLocked(),
+				user.getIsCredentialsNonExpired(),
+				user.getIsEnabled(),
+				authorities);
 	}
 
-	public Long getId() {
-		return id;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
 	}
 
 	public String getEmail() {
@@ -80,9 +80,9 @@ public class UserDetailsImpl implements UserDetails {
 	@Override
 	public String getUsername() {
 		return username;
-    }
-    
-    @Override
+	}
+
+	@Override
 	public boolean isAccountNonExpired() {
 		return isAccountNonExpired;
 	}
@@ -102,18 +102,12 @@ public class UserDetailsImpl implements UserDetails {
 		return isEnabled;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		UserDetailsImpl user = (UserDetailsImpl) o;
-		return Objects.equals(id, user.id);
+	public String getPhone() {
+		return phone;
 	}
-	@Override
-	public int hashCode() {		
-		return id.intValue();
+
+	public String getDni() {
+		return dni;
 	}
 
 }

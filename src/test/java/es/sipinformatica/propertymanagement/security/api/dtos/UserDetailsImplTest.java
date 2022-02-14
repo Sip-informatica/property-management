@@ -68,7 +68,6 @@ class UserDetailsImplTest {
         assertTrue(userDetails.getAuthorities().stream().findAny().isPresent());
         assertTrue(userAuthorities.containsAll(expectedAuthorities));
         assertEquals(userDetails.getEmail(), user.getEmail());
-        assertEquals(userDetails.getId(), user.getId());
-
+        
     }
 }

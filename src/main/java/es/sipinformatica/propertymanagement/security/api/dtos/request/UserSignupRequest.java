@@ -32,8 +32,8 @@ public class UserSignupRequest {
     @NonNull
     @NotBlank
     @Size(min = 6, max = 40)
-    @Pattern(regexp = PASSWORD_PATTERN)
-    private String password;
+    @Pattern(regexp = PASSWORD_PATTERN, message = "Password must be at least 8 characters and contain at least one digit, one lowercase and one uppercase letter")
+    private String password;    
     @ValidateNieNifNifBusiness
     private String dni;
     @NonNull

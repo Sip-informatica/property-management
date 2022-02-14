@@ -23,7 +23,6 @@ import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
 import es.sipinformatica.propertymanagement.security.domain.services.MailService;
 import es.sipinformatica.propertymanagement.security.domain.services.UserService;
-import es.sipinformatica.propertymanagement.security.domain.services.UtilService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -57,8 +56,7 @@ public class AcocountResource {
                 });
         userRepository.findByDniAndActivationKey(userSignupRequest.getDni(), null).ifPresent(user -> {
             throw new ResourceConflictException(ERROR + "NIF already exists");
-        });
-        //UtilService.validateNieNifNifBusiness(userSignupRequest.getDni());
+        });        
         User user = userService.registerUser(userSignupRequest);
         mailService.sendActivationEmail(user, request.getRequestURL().toString());
         return ResponseEntity.ok(new MessageResponse(userSignupRequest.getUsername() + " registered successfully"));

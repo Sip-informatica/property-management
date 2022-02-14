@@ -13,17 +13,18 @@ import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceN
 public class TestController {
 	public static final String EXCEPTIONS = "/exception";
 	public static final String ID_ID = "/{id}";
-	
+
 	@GetMapping("/all")
 	public String allAccess() {
 		return "Public Content.";
 	}
+
 	@GetMapping("/adminmanager")
 	@PreAuthorize("hasRole('MANAGER') or  hasRole('ADMIN')")
 	public String adminmanagerAccess() {
 		return "AdminManager Board.";
 	}
-	
+
 	@GetMapping("/authenticated")
 	@PreAuthorize("hasRole('MANAGER') or hasRole('OPERATOR') or hasRole('CUSTOMER') or hasRole('ADMIN') or hasRole('AUTHENTICATED ')")
 	public String userAccess() {
@@ -34,15 +35,15 @@ public class TestController {
 	@PreAuthorize("hasRole('CUSTOMER')")
 	public String customerAccess() {
 		return "Customer Board.";
-    }
-    
-    @GetMapping("/operator")
+	}
+
+	@GetMapping("/operator")
 	@PreAuthorize("hasRole('OPERATOR')")
 	public String operatorAccess() {
 		return "Operator Board.";
-    }
+	}
 
-    @GetMapping("/manager")
+	@GetMapping("/manager")
 	@PreAuthorize("hasRole('MANAGER')")
 	public String managerAccess() {
 		return "Manager Board.";
@@ -53,19 +54,19 @@ public class TestController {
 	public String adminAccess() {
 		return "Admin Board.";
 	}
-	
+
 	@GetMapping(EXCEPTIONS + ID_ID)
 	public void read(@PathVariable int id) throws Exception {
-		if (id < 1){
-			throw new ResourceNotFoundException("id: " + id);			
+		if (id < 1) {
+			throw new ResourceNotFoundException("id: " + id);
 		} else {
-			throw new Exception();
+			throw new Exception("Test Exception " + "id: " + id);
 		}
 	}
-	
-	@GetMapping(EXCEPTIONS + "/handleall" )
-	public void handleAll() throws Exception {		
-			throw new Exception();			
+
+	@GetMapping(EXCEPTIONS + "/handleall")
+	public void handleAll() throws Exception {
+		throw new Exception("Test Exception - handleAll");
 	}
-	
+
 }

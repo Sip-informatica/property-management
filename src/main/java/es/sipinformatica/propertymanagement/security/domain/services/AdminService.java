@@ -130,6 +130,7 @@ public class AdminService {
     }
 
     private void checkDni(String dni) {
+        UtilService.validateNieNifNifBusiness(dni);
         if (Boolean.TRUE.equals(this.userRepository.existsByDni(dni))) {
             throw new ResourceConflictException("The dni already exists: " + dni);
         }

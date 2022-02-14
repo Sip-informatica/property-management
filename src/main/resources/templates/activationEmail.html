@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{email.activation.title}">JHipster activation</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}" />
+    </head>
+    <body>
+        <p th:text="#{email.activation.greeting(${user.username})}">
+            Estimado 
+        </p>
+        <p th:text="#{email.activation.text1}">
+            Su cuenta de usuario ha sido creada, por favor, haga clic en el enlace de abajo para activarla:
+        </p>
+        <p>
+            <a th:href="@{|${baseUrl}/activate/${user.activationKey}|}"
+               th:text="@{|${baseUrl}/activate/${user.activationKey}|}">Link de activación</a>
+        </p>
+        <p>
+            <span th:text="#{email.activation.text2}">Saludos, </span>
+            <br/>
+            <em th:text="#{email.signature}">sip-informatica.es</em>
+        </p>
+    </body>
+</html>

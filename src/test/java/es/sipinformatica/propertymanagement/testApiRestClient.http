@@ -1,30 +1,33 @@
-POST http://localhost:8080/api/auth/signup HTTP/1.1
+POST http://localhost:8080/api/auth/register HTTP/1.1
 content-Type: application/json
 
 {
     "username": "AdminManager",
     "email": "adminmanager@sip.es",
     "password": "passAdminManager",
+    "phone": "600000000",    
     "role": ["admin","manager"]
 }
 ###
-POST http://localhost:8080/api/auth/signup HTTP/1.1
+POST http://localhost:8080/api/auth/register HTTP/1.1
 content-Type: application/json
 
 {
     "username": "manager",
     "email": "manager@sip.es",
     "password": "passManager",
+    "phone": "660000000",
     "role": ["manager"]
 }
 ###
-POST http://localhost:8080/api/auth/signup HTTP/1.1
+POST http://localhost:8080/api/auth/register HTTP/1.1
 content-Type: application/json
 
 {
     "username": "admin",
     "email": "admin@sip.es",
     "password": "passAdmin",
+    "phone": "666000000",
     "role": ["admin"]
 }
 ###
@@ -42,7 +45,7 @@ content-Type: application/json
 ###
 GET http://localhost:8080/api/test/admin HTTP/1.1
 content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjMzNDUzNjkzLCJleHAiOjE2MzM1NDAwOTN9.B6QzxMWjYP-fotkdbYQuk2AtoDVEE9-bwfTa5E5k3S_LVLjI-MO02LkjctQaMwHxxFMUVtzOzsJahZPg5MNkaA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjQ0ODcwNjE0LCJleHAiOjE2NDQ5NTcwMTR9.souuPlo8vnyubrE7pVm25wKSN_HyfGm_tNslFAKMkQI8WZbNoDSlNlzaP2RGU-x3XJs_RCX9oSPM-yVSPNyjkg
 ###
 POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-Type: application/json
@@ -54,7 +57,7 @@ content-Type: application/json
 ###
 GET http://localhost:8080/api/test/manager HTTP/1.1
 content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZSI6IlJPTEVfTUFOQUdFUiIsImlhdCI6MTY0MzExNjM3MCwiZXhwIjoxNjQzMjAyNzcwfQ.UurBFHnqxD7Y2zmnnKOd0BuU-mwGy3eRxUXQM8ViqSar_twKDaGW4fKKSLgVQ0_w-1ChkLIJq1Gbso9n7JeLhA
 ###
 POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-Type: application/json
@@ -71,7 +74,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlI
 ###
 GET http://localhost:8080/api/admin/users-admin HTTP/1.1
 content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjMzNDUzNjkzLCJleHAiOjE2MzM1NDAwOTN9.B6QzxMWjYP-fotkdbYQuk2AtoDVEE9-bwfTa5E5k3S_LVLjI-MO02LkjctQaMwHxxFMUVtzOzsJahZPg5MNkaA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2NDQ4NzA2OTcsImV4cCI6MTY0NDk1NzA5N30.pX2iebc-nvMSFPIgG19pXTceWeDtkxzpmlp8dYReI6uBHzC9O2p3TI3OAExpUeC0UKZ-0XiL3iP_aHtG-VENCA
 ###
 DELETE  http://localhost:8080/api/admin/users-admin/email/v@v.es HTTP/1.1
 content-Type: : application/json
@@ -85,12 +88,12 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlI
 ###
 GET http://localhost:8080/api/test/authenticated HTTP/1.1
 content-Type: : application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbk1hbmFnZXIiLCJyb2xlIjoiUk9MRV9NQU5BR0VSLFJPTEVfQURNSU4iLCJpYXQiOjE2MTIzNTE1NDAsImV4cCI6MTYxMjQzNzk0MH0.chr85HoKEFCEBQKBv9j-LxvBDA4vyyuIKAXluUwlz-R4QIRZFx0m4cMVGFtf6hMiL1ccyp1ZpCLYI-FufYr-Ew
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZSI6IlJPTEVfTUFOQUdFUiIsImlhdCI6MTY0MzExNjM3MCwiZXhwIjoxNjQzMjAyNzcwfQ.UurBFHnqxD7Y2zmnnKOd0BuU-mwGy3eRxUXQM8ViqSar_twKDaGW4fKKSLgVQ0_w-1ChkLIJq1Gbso9n7JeLhA
 
 ###
 POST http://localhost:8080/api/admin/users-admin HTTP/1.1
 content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNjMzNDUzNjkzLCJleHAiOjE2MzM1NDAwOTN9.B6QzxMWjYP-fotkdbYQuk2AtoDVEE9-bwfTa5E5k3S_LVLjI-MO02LkjctQaMwHxxFMUVtzOzsJahZPg5MNkaA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZSI6IlJPTEVfTUFOQUdFUiIsImlhdCI6MTY0MzExNjM3MCwiZXhwIjoxNjQzMjAyNzcwfQ.UurBFHnqxD7Y2zmnnKOd0BuU-mwGy3eRxUXQM8ViqSar_twKDaGW4fKKSLgVQ0_w-1ChkLIJq1Gbso9n7JeLhA
 
  {
     "phone": "33rr33r33",
@@ -108,5 +111,16 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJST0xFX
     "isCredentialsNonExpired": true
   }
 
+###
+POST http://localhost:8080/api/auth/register HTTP/1.1
+content-Type: application/json
+
+{
+    "username": "UserTest",   
+    "password": "1passAdminManager", 
+    "phone": "194578459",
+    "email": "garcia@gmail.com",
+    "dni": "68371422N"     
+}
 ###
 

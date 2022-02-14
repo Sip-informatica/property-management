@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import es.sipinformatica.propertymanagement.security.api.dtos.validator.ValidateNieNifNifBusiness;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
@@ -41,6 +42,7 @@ public class UserDto {
     @Size(max = 50)
     @Email
     private String email;
+    @ValidateNieNifNifBusiness
     private String dni;
     private String address;
     @Size(min = 6, max = 40)

@@ -14,11 +14,11 @@ import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
+@AutoConfigureWebTestClient(timeout = "36000")
 class AuthenticationControllerIT {
     private static final String API = "/api/auth";
     private static final String SIGNIN = "/signin";
-    private static final String SIGNUP = "/signup";
+    private static final String SIGNUP = "/register";
     private LoginRequest loginRequest;
     private UserSignupRequest userSignupRequest;
 
@@ -29,8 +29,8 @@ class AuthenticationControllerIT {
 
     @BeforeEach
     private void userSignupRequestInit() {
-        userSignupRequest = UserSignupRequest.builder().username("username").dni("dni").email("email@sip.es")
-                .password("password").phone("phone").build();
+        userSignupRequest = UserSignupRequest.builder().username("username").dni("74639626A").email("email@sip.es")
+                .password("1Password").phone("123456789").build();
     }
 
     @Test
@@ -55,7 +55,7 @@ class AuthenticationControllerIT {
     void shouldRegisterUserConflict() {
         userSignupRequest.setUsername("AdminManager");
         userSignupRequest.setEmail("adminmanager@sip.es");
-        userSignupRequest.setPassword("password");
+        userSignupRequest.setPassword("1Password");
 
         this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
                 .exchange().expectStatus().is4xxClientError().expectBody().jsonPath("message", "Conflict Exception ");

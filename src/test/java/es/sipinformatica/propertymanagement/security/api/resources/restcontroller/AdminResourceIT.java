@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.UserDto;
 
-@Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

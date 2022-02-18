@@ -1,6 +1,5 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.request.LoginRequest;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
-import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
-import es.sipinformatica.propertymanagement.security.data.model.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient(timeout = "36000")
@@ -25,8 +22,6 @@ class AuthenticationControllerIT {
 
     @Autowired
     private WebTestClient webTestClient;
-    @Autowired
-    private UserRepository userRepository;
 
     @BeforeEach
     private void userSignupRequestInit() {
@@ -43,14 +38,6 @@ class AuthenticationControllerIT {
     }
 
     @Test
-    void shouldRegisterUser() {
-
-        this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
-                .exchange().expectStatus().isOk().expectBody().jsonPath("message").exists();
-        
-    }
-
-    @Test
     void shouldRegisterUserConflict() {
         userSignupRequest.setUsername("AdminManager");
         userSignupRequest.setEmail("adminmanager@sip.es");
@@ -59,12 +46,5 @@ class AuthenticationControllerIT {
         this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
                 .exchange().expectStatus().is4xxClientError().expectBody().jsonPath("message", "Conflict Exception ");
     }
-
-    @AfterEach
-    private void deleteUser() {
-        User userTest = userRepository.findByUsername("username").orElseThrow();
-        userRepository.delete(userTest);
-    }
-
 
 }

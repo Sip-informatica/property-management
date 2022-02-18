@@ -22,7 +22,6 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceConflictException;
-import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceForbiddenException;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
 
 @ExtendWith(SpringExtension.class)
@@ -58,10 +57,10 @@ class AdminServiceIT {
         private void createUser() {
                 Set<String> rolesString = new HashSet<>();
                 rolesString.add("ROLE_ADMIN");
-                userBuilderCreate.setIsAccountNonExpired(null);
-                userBuilderCreate.setIsAccountNonLocked(null);
-                userBuilderCreate.setIsCredentialsNonExpired(null);
-                userBuilderCreate.setIsEnabled(null);
+                userBuilderCreate.setIsAccountNonExpired(true);
+                userBuilderCreate.setIsAccountNonLocked(true);
+                userBuilderCreate.setIsCredentialsNonExpired(true);
+                userBuilderCreate.setIsEnabled(true);
 
                 adminService.create(userBuilderCreate, rolesString);
                 adminService.create(userBuilder, rolesString);
@@ -240,12 +239,7 @@ class AdminServiceIT {
                 this.userBuilderUpdate.setDni("A08001851");
                 assertThrows(ResourceConflictException.class, () -> adminService
                                 .updateByUsername("adminServiceemailCreateTest@sip.es", userBuilderUpdate, rol),
-                                "The dni already exists: A08001851");
-
-                this.userBuilderUpdate.setDni("p08001851");
-                assertThrows(ResourceForbiddenException.class, () -> adminService
-                                .updateByUsername("adminServiceemailCreateTest@sip.es", userBuilderUpdate, rol),
-                                "Invalid format for the NIF: p08001851");
+                                "The dni already exists: A08001851");              
 
                 this.userBuilderUpdate.setDni("45673254S");
                 this.userBuilderUpdate.setEmail("adminServiceemailTest@sip.es");

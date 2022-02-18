@@ -48,10 +48,10 @@ class AdminResourceIT {
         this.roles.add("ROLE_ADMIN");
         this.roles.add("ROLE_CUSTOMER");
 
-        this.userBuilderCreate = UserDto.builder().username("Create").email("emailTest@sip.es").phone("639736746")
-                .dni("dniCreateTest").password("password").roles(roles).build();
-        this.userBuilder = UserDto.builder().username("usernameRoles").email("emailTest@sip.es").phone("phoneTest")
-                .dni("dniTest").password("password").roles(roles).build();
+        this.userBuilderCreate = UserDto.builder().username("Create").email("emailTest@sip.es").phone("635736766")
+                .dni("25524994P").password("2Ppassword").roles(roles).isEnabled(true).build();
+        this.userBuilder = UserDto.builder().username("usernameRoles").email("emailTest@sip.es").phone("145784578")
+                .dni("37721298X").password("3Ppassword").roles(roles).build();
     }
 
     public static String asJsonString(final Object obj) {

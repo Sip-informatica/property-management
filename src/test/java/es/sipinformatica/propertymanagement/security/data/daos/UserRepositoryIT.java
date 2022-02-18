@@ -44,6 +44,7 @@ class UserRepositoryIT {
         roles.add(roleRepository.findByName(ERole.ROLE_OPERATOR).get());
         roles.add(roleRepository.findByName(ERole.ROLE_CUSTOMER).get());
         User newUser = new User("operatorCustomer", "operatorCustomer@sip.es", "passOperatorCustomer");
+        newUser.setDni("25524994P");
         newUser.setRoles(roles);
         userRepository.save(newUser);
 

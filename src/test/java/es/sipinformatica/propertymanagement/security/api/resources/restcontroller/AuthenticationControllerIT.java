@@ -1,5 +1,6 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,7 @@ class AuthenticationControllerIT {
 
         this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
                 .exchange().expectStatus().isOk().expectBody().jsonPath("message").exists();
-
-        User userTest = userRepository.findByUsername("username").orElseThrow();
-        userRepository.delete(userTest);
+        
     }
 
     @Test
@@ -60,5 +59,12 @@ class AuthenticationControllerIT {
         this.webTestClient.post().uri(API + SIGNUP).contentType(MediaType.APPLICATION_JSON).bodyValue(userSignupRequest)
                 .exchange().expectStatus().is4xxClientError().expectBody().jsonPath("message", "Conflict Exception ");
     }
+
+    @AfterEach
+    private void deleteUser() {
+        User userTest = userRepository.findByUsername("username").orElseThrow();
+        userRepository.delete(userTest);
+    }
+
 
 }

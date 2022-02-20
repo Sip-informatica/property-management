@@ -18,7 +18,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class UserSignupRequest {
     // digit + lowercase char + uppercase char
-    private static final String PASSWORD_PATTERN ="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+    private static final String P_PATTERN ="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
     @NonNull
     @NotBlank
@@ -32,7 +32,7 @@ public class UserSignupRequest {
     @NonNull
     @NotBlank
     @Size(min = 6, max = 40)
-    @Pattern(regexp = PASSWORD_PATTERN, message = "Password must be at least 8 characters and contain at least one digit, one lowercase and one uppercase letter")
+    @Pattern(regexp = P_PATTERN, message = "Password must be at least 8 characters and contain at least one digit, one lowercase and one uppercase letter")
     private String password;    
     @ValidateNieNifNifBusiness
     private String dni;

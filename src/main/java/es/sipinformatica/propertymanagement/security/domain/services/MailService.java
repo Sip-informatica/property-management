@@ -61,7 +61,7 @@ public class MailService {
     }
 
     @Async
-    public void sendSimpleEmail(String to, String subject, String content) throws MailException, MessagingException {
+    public void sendSimpleEmail(String to, String subject, String content) throws MailException {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setFrom(from);

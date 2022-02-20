@@ -51,7 +51,7 @@ public class MailServiceTest {
     }
 
     @Test
-    public void shouldSendMail() throws MessagingException {
+     void shouldSendMail() throws MessagingException {
         doNothing().when(mailService).sendEmail(anyString(), anyString(), anyString(), anyBoolean(), anyBoolean());
         mailService.sendEmail("testemail@gmail.com", "Test Subject", "Test mail content", false, true);
         verify(mailService).sendEmail(messageCaptor.capture(), messageCaptor.capture(), messageCaptor.capture(),
@@ -61,7 +61,7 @@ public class MailServiceTest {
     }
 
     @Test
-    public void shouldSendSimpleMail() throws MessagingException {
+     void shouldSendSimpleMail() throws MessagingException {
         doNothing().when(mailService).sendSimpleEmail(anyString(), anyString(), anyString());
         mailService.sendSimpleEmail("testemail@gmail.com", "Test Subject", "Test mail content");
         verify(mailService).sendSimpleEmail(messageCaptor.capture(), messageCaptor.capture(), messageCaptor.capture());
@@ -69,7 +69,7 @@ public class MailServiceTest {
     }
 
     @Test
-    public void shouldSendActivationEmail() throws MessagingException {
+     void shouldSendActivationEmail() throws MessagingException {
         doNothing().when(mailService).sendActivationEmail(any(), anyString());
         mailService.sendActivationEmail(userBuilder, "http://localhost:8080/api/auth/register");
         verify(mailService).sendActivationEmail(userCaptor.capture(), messageCaptor.capture());

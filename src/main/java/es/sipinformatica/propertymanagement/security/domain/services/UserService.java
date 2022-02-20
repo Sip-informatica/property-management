@@ -18,7 +18,9 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -32,7 +34,7 @@ public class UserService {
 
     public User registerUser(UserSignupRequest userSignupRequest) {
 
-        deleteExpiredUsers(userSignupRequest);        
+        deleteExpiredUsers(userSignupRequest);
         Set<Role> rol = new HashSet<>();
         Role role = roleRepository.findByName(ERole.ROLE_MANAGER)
                 .orElseThrow(
@@ -67,13 +69,13 @@ public class UserService {
     }
 
     public User findUser(String login) {
-        User findUser = userRepository.findAll().stream()
+        return userRepository.findAll().stream()
                 .filter(user -> user.getUsername().equals(login)
                         || user.getEmail().equals(login)
                         || user.getDni().equals(login)
                         || user.getPhone().equals(login))
                 .findFirst().orElse(null);
-        return findUser;
+
     }
 
     public Optional<User> activateUser(String token) {
@@ -91,12 +93,12 @@ public class UserService {
 
     @Scheduled(cron = "@weekly")
     public void deleteExpiredUsers() {
-        System.out.println("Tarea usando expresiones cron - " + LocalDateTime.now());
+        log.info("Tarea usando expresiones cron - " + LocalDateTime.now());
         userRepository.findAll().forEach(user -> {
             if (user.getActivationKey() != null) {
                 userRepository.delete(user);
             }
         });
-    }   
+    }
 
 }

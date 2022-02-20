@@ -53,8 +53,13 @@ class UserServiceTest {
 
     @Test
     void shouldRegisterUser() {
+        when(userRepository.findAll()).thenReturn(userList);
+        when(userRepository.save(any(User.class))).thenReturn(userDefault);        
+       
         User userRegistred = userService.registerUser(userSignupRequest);
         log.info("userRegistred: {}", userRegistred);
+        log.info("userList: {}", userList.get(0));
+        Mockito.verify(userRepository, Mockito.times(1)).delete(userList.get(0));
 
         assertEquals(userSignupRequest.getUsername(), userRegistred.getUsername());
         assertNotEquals(userSignupRequest.getPassword(), userRegistred.getPassword());
@@ -63,18 +68,23 @@ class UserServiceTest {
         assertEquals(userSignupRequest.getPhone(), userRegistred.getPhone());
         assertEquals("ROLE_MANAGER", userRegistred.getRoles().stream().findFirst().get().getName().toString());
 
-    }
+    }  
 
     @Test
     void shouldFindUser() {       
         
         when(userRepository.findAll()).thenReturn(userList);
 
-        User userFind = userService.findUser("username");
-        log.info("userFind: {}", userFind);
+        User userFindUsername = userService.findUser("username");
+        User userFindDni = userService.findUser("Z6762555P");
+        User userFindEmail = userService.findUser("mail@www.es");
+        User userFindPhone = userService.findUser("123478526");
+        log.info("userFind: {}", userFindUsername);
 
-        assertEquals(userDefault.getUsername(), userFind.getUsername());
-        assertEquals("mail@www.es", userFind.getEmail());
+        assertEquals(userDefault.getUsername(), userFindUsername.getUsername());
+        assertEquals("mail@www.es", userFindEmail.getEmail());
+        assertEquals("123478526", userFindPhone.getPhone());
+        assertEquals("Z6762555P", userFindDni.getDni());
 
     }
 
@@ -93,7 +103,7 @@ class UserServiceTest {
         assertEquals(userDefault.get().getEmail(), userActivated.get().getEmail());
         assertEquals(userDefault.get().getActivationKey(), userActivated.get().getActivationKey());
         assertTrue(userActivated.get().getIsEnabled());
-    }
+    }  
 
     @Test
     void shouldDeleteExpiredUsers() {

@@ -25,7 +25,7 @@ import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 
 @SpringBootTest
-public class MailServiceTest {
+class MailServiceTest {
     @Mock
     private MailService mailService;
 

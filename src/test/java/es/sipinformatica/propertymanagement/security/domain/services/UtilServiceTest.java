@@ -20,6 +20,7 @@ class UtilServiceTest {
         assertFalse(UtilService.validateNIF("01234a67Z"));
         assertFalse(UtilService.validateNIF("012345678-"));
         assertFalse(UtilService.validateNIF("0123456789"));
+        assertFalse(UtilService.validateNIF("0123456789345"));
 
         // DNI que si cumplen todas las validaciones
         assertTrue(UtilService.validateNIF("12345678Z"));
@@ -61,6 +62,10 @@ class UtilServiceTest {
         assertTrue(UtilService.validateNifBusiness("A08001851"));
         assertTrue(UtilService.validateNifBusiness("A29268166"));
         assertTrue(UtilService.validateNifBusiness("a29268166"));
+        assertFalse(UtilService.validateNifBusiness("-1"));
+        assertFalse(UtilService.validateNifBusiness(""));
+        assertFalse(UtilService.validateNifBusiness(" "));
+        assertFalse(UtilService.validateNifBusiness(" @#"));
     }
 
 }

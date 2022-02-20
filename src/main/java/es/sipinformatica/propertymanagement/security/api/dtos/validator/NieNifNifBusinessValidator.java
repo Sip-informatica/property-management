@@ -9,6 +9,7 @@ public class NieNifNifBusinessValidator implements ConstraintValidator<ValidateN
 
     @Override
     public void initialize(ValidateNieNifNifBusiness constraintAnnotation) {
+         // default implementation ignored
 
     }
 

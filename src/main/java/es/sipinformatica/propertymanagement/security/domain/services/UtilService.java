@@ -38,6 +38,8 @@ public class UtilService {
                 case 'Z':
                     nie = nie.replace('Z', '2');
                     return validateNIF(nie);
+                default:
+                    return false;
             }
         }
         return false;
@@ -79,14 +81,12 @@ public class UtilService {
             final char letraIni = nif.charAt(0);
             final char caracterFin = nif.charAt(8);
 
-            final boolean esControlValido =
-                    // ¿el caracter de control es válido como letra?
-                    (CONTROL_SOLO_NUMEROS.indexOf(letraIni) < 0
-                            && CONTROL_NUMERO_A_LETRA.charAt(digitoD) == caracterFin)
-                            ||
-                            // ¿el caracter de control es válido como dígito?
-                            (CONTROL_SOLO_LETRAS.indexOf(letraIni) < 0 && digitoD == Character.digit(caracterFin, 10));
-            return esControlValido;
+            // ¿el caracter de control es válido como letra?
+            return (CONTROL_SOLO_NUMEROS.indexOf(letraIni) < 0
+                    && CONTROL_NUMERO_A_LETRA.charAt(digitoD) == caracterFin)
+                    ||
+                    // ¿el caracter de control es válido como dígito?
+                    (CONTROL_SOLO_LETRAS.indexOf(letraIni) < 0 && digitoD == Character.digit(caracterFin, 10));
 
         } catch (Exception e) {
             return false;
@@ -94,11 +94,9 @@ public class UtilService {
     }
 
     public static boolean validateNieNifNifBusiness(String dni) {
-        if (Boolean.FALSE.equals(UtilService.validateNIF(dni)) && Boolean.FALSE.equals(UtilService.validateNIE(dni))
-                && Boolean.FALSE.equals(UtilService.validateNifBusiness(dni))) {            
-            return false;
-        }
-        return true;
+        return !(Boolean.FALSE.equals(UtilService.validateNIF(dni))
+                && Boolean.FALSE.equals(UtilService.validateNIE(dni))
+                && Boolean.FALSE.equals(UtilService.validateNifBusiness(dni)));
 
     }
 

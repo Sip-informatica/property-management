@@ -15,24 +15,8 @@ class ExceptionResourceIT {
     public static final String API = "/api/auth";
 
     @Autowired
-    private WebTestClient webTestClient;
+    private WebTestClient webTestClient;   
    
-    @Test
-    void testReadNotFoundException(){
-        this.webTestClient
-        .get().uri(EXCEPTIONS + ID_ID, 0)
-        .exchange()
-        .expectStatus()
-        .isNotFound();        
-    }
-    @Test
-    void testBadRequestException(){
-        this.webTestClient
-        .get().uri(EXCEPTIONS + ID_ID, 9)
-        .exchange()
-        .expectStatus()
-        .is5xxServerError();        
-    }
     @Test
     void testForbiddenException(){
         this.webTestClient

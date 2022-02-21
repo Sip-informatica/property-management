@@ -1,5 +1,6 @@
 package es.sipinformatica.propertymanagement.security.domain.services;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
@@ -32,7 +33,8 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User registerUser(UserSignupRequest userSignupRequest) {
+    public User registerUser(UserSignupRequest userSignupRequest) {       
+        String activationKey = RandomStringUtils.random(20, 0, 0, true, true, null, new SecureRandom());
 
         deleteExpiredUsers(userSignupRequest);
         Set<Role> rol = new HashSet<>();
@@ -47,7 +49,7 @@ public class UserService {
                 .password(passwordEncoder.encode(userSignupRequest.getPassword()))
                 .dni(userSignupRequest.getDni().toUpperCase())
                 .phone(userSignupRequest.getPhone()).roles(rol).isEnabled(false)
-                .activationKey(RandomStringUtils.randomAlphanumeric(20)).firstAccess(LocalDateTime.now())
+                .activationKey(activationKey).firstAccess(LocalDateTime.now())
                 .build();
 
         userRepository.save(newUser);

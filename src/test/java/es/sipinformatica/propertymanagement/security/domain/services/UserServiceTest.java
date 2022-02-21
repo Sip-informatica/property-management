@@ -67,6 +67,7 @@ class UserServiceTest {
         assertEquals(userSignupRequest.getEmail(), userRegistred.getEmail());
         assertEquals(userSignupRequest.getPhone(), userRegistred.getPhone());
         assertEquals("ROLE_MANAGER", userRegistred.getRoles().stream().findFirst().get().getName().toString());
+        assertEquals(20, userRegistred.getActivationKey().length());
 
     }  
 

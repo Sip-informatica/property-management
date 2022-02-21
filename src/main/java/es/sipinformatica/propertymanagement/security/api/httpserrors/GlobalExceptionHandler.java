@@ -64,9 +64,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status, 
         WebRequest request) {
         
-		List<String> detailsError = new ArrayList<>();
-        String message = ex.getMessage().split(":", 2)[0];
-        detailsError.add(message.isEmpty() ? "Malformed JSON request" : message);
+		List<String> detailsError = new ArrayList<>();        
+        String message = ex.getMessage().isEmpty() ? "Malformed JSON request" : ex.getMessage().split(":", 2)[0];
+        detailsError.add(message);
         
         ApiErrorMessage err = new ApiErrorMessage(
             LocalDateTime.now(),

@@ -22,9 +22,7 @@ class UtilServiceTest {
         assertFalse(UtilService.validateNIF("0123456789"));
         assertFalse(UtilService.validateNIF("0123456789345"));
 
-        // DNI que si cumplen todas las validaciones
-        assertTrue(UtilService.validateNIF("12345678Z"));
-        assertTrue(UtilService.validateNIF("45673254S"));
+        // DNI que si cumplen todas las validaciones        
         assertTrue(UtilService.validateNIF("72849506L"));
         assertTrue(UtilService.validateNIF("72849506l"));
 

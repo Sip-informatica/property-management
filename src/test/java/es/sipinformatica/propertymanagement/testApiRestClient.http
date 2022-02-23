@@ -123,4 +123,21 @@ content-Type: application/json
     "dni": "68371422N"     
 }
 ###
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-Type: application/json
 
+{
+    "username": "68371422N",   
+    "password": "2passAdminManager"    
+}
+###
+POST http://localhost:8080/api/auth/change-password HTTP/1.1
+content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VydGVzdCIsInJvbGUiOiJST0xFX01BTkFHRVIiLCJpYXQiOjE2NDU2MTYwNTMsImV4cCI6MTY0NTcwMjQ1M30.tmAOeTYrQU4QACj9d9sgd5ojPyeiuqPHrrSJwMfUHMp_uiaE0B9CNlaFxEut_Nwkp4vR177Km0-vlH-7MEXwRg
+
+{
+    "oldPassword": "1passAdminManager",   
+    "newPassword": "2passAdminManager"    
+}
+
+###

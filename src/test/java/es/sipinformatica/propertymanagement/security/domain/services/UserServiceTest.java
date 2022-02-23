@@ -21,7 +21,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
+import es.sipinformatica.propertymanagement.security.data.daos.RoleRepository;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
+import es.sipinformatica.propertymanagement.security.data.model.ERole;
+import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,31 +38,44 @@ class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private RoleRepository roleRepository;
+
     @Autowired
     private UserService userService;
 
     private List<User> userList;
     private User userDefault;
+    private Optional<User> userDefaultOptional;
 
     @BeforeEach
     void init() {
-        userSignupRequest = UserSignupRequest.builder().username("username").password("1Ppassword").dni("Z6762555P")
-                .email("mail@www.es").phone("123478526").build();
         userList = new ArrayList<>();
         userDefault = new User();
+        userDefaultOptional = Optional.of(new User());
+        userSignupRequest = UserSignupRequest.builder().username("username").password("1Ppassword").dni("Z6762555P")
+                .email("mail@www.es").phone("123478526").build();
+
         BeanUtils.copyProperties(userSignupRequest, userDefault);
         userList.add(userDefault);
+        BeanUtils.copyProperties(userSignupRequest, userDefaultOptional);
+        userDefaultOptional.get().setActivationKey("tokenactivationKey");
+
+        when(userRepository.findAll()).thenReturn(userList);
+        when(userRepository.findByActivationKey(any())).thenReturn(userDefaultOptional);
+        when(userRepository.save(any(User.class))).thenReturn(userDefault);
+        when(roleRepository.findByName(any(ERole.class))).thenReturn(Optional.of(Role.builder().name(ERole.ROLE_MANAGER).build()));
+
     }
 
     @Test
     void shouldRegisterUser() {
-        when(userRepository.findAll()).thenReturn(userList);
-        when(userRepository.save(any(User.class))).thenReturn(userDefault);        
-       
+
         User userRegistred = userService.registerUser(userSignupRequest);
         log.info("userRegistred: {}", userRegistred);
         log.info("userList: {}", userList.get(0));
-        Mockito.verify(userRepository, Mockito.times(1)).delete(userList.get(0));
+       
+        Mockito.verify(userRepository, Mockito.times(1)).delete(any(User.class));
 
         assertEquals(userSignupRequest.getUsername(), userRegistred.getUsername());
         assertNotEquals(userSignupRequest.getPassword(), userRegistred.getPassword());
@@ -69,12 +85,10 @@ class UserServiceTest {
         assertEquals("ROLE_MANAGER", userRegistred.getRoles().stream().findFirst().get().getName().toString());
         assertEquals(20, userRegistred.getActivationKey().length());
 
-    }  
+    }
 
     @Test
-    void shouldFindUser() {       
-        
-        when(userRepository.findAll()).thenReturn(userList);
+    void shouldFindUser() {
 
         User userFindUsername = userService.findUser("username");
         User userFindDni = userService.findUser("Z6762555P");
@@ -91,30 +105,20 @@ class UserServiceTest {
 
     @Test
     void shouldActivationUser() {
-        Optional<User> userDefault = Optional.of(new User());
-        BeanUtils.copyProperties(userSignupRequest, userDefault);
-        userDefault.get().setActivationKey("tokenactivationKey");
-
-        when(userRepository.findByActivationKey(any())).thenReturn(userDefault);
 
         Optional<User> userActivated = userService.activateUser("tokenactivationKey");
         log.info("userActivated: {}", userActivated);
 
-        assertEquals(userDefault.get().getUsername(), userActivated.get().getUsername());
-        assertEquals(userDefault.get().getEmail(), userActivated.get().getEmail());
-        assertEquals(userDefault.get().getActivationKey(), userActivated.get().getActivationKey());
+        assertEquals(userDefaultOptional.get().getUsername(), userActivated.get().getUsername());
+        assertEquals(userDefaultOptional.get().getEmail(), userActivated.get().getEmail());
+        assertEquals(userDefaultOptional.get().getActivationKey(), userActivated.get().getActivationKey());
         assertTrue(userActivated.get().getIsEnabled());
-    }  
+    }
 
     @Test
     void shouldDeleteExpiredUsers() {
-        List<User> userList = new ArrayList<>();
-        User userDefault = new User();
-        BeanUtils.copyProperties(userSignupRequest, userDefault);
-        userDefault.setActivationKey("tokenactivationKey");
-        userList.add(userDefault);
-        when(userRepository.findAll()).thenReturn(userList);
 
+        userDefault.setActivationKey("tokenactivationKey");
         userService.deleteExpiredUsers();
 
         Mockito.verify(userRepository, Mockito.times(1)).delete(userDefault);

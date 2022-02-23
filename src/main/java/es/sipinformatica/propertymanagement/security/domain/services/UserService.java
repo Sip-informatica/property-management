@@ -19,6 +19,7 @@ import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
 import es.sipinformatica.propertymanagement.security.domain.exceptions.ResourceNotFoundException;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User registerUser(UserSignupRequest userSignupRequest) {       
+    public User registerUser(UserSignupRequest userSignupRequest) {
         String activationKey = RandomStringUtils.random(20, 0, 0, true, true, null, new SecureRandom());
 
         deleteExpiredUsers(userSignupRequest);
@@ -91,6 +92,16 @@ public class UserService {
                     userRepository.save(user);
                     return user;
                 });
+    }
+
+    public void changePassword(String oldPassword, @NonNull String newPassword) {
+        User user = userRepository.findByUsername(SecurityService.getCurrentUser())
+                .orElseThrow(() -> new ResourceNotFoundException(ERROR + "The username don't exist: " + (SecurityService.getCurrentUser())));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new ResourceNotFoundException(ERROR + "Old password is not correct");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     @Scheduled(cron = "@weekly")

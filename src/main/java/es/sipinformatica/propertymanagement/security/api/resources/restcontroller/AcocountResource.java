@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import es.sipinformatica.propertymanagement.security.api.dtos.request.ChangePassword;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
 import es.sipinformatica.propertymanagement.security.api.httpserrors.MessageResponse;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
@@ -29,6 +31,8 @@ import es.sipinformatica.propertymanagement.security.domain.services.UserService
 public class AcocountResource {
     private static final String REGISTER = "/register";
     private static final String ACTIVATE = "/register/activate/{token}";
+    private static final String CHANGE_PASSWORD = "/change-password";
+    private static final String RESET_PASSWORD = "/reset-password";
     private static final String ERROR = "Error: ";
     @Autowired
     UserRepository userRepository;
@@ -56,7 +60,7 @@ public class AcocountResource {
                 });
         userRepository.findByDniAndActivationKey(userSignupRequest.getDni(), null).ifPresent(user -> {
             throw new ResourceConflictException(ERROR + "NIF already exists");
-        });        
+        });
         User user = userService.registerUser(userSignupRequest);
         mailService.sendActivationEmail(user, request.getRequestURL().toString());
         return ResponseEntity.ok(new MessageResponse(userSignupRequest.getUsername() + " registered successfully"));
@@ -72,4 +76,12 @@ public class AcocountResource {
 
         return ResponseEntity.ok(new MessageResponse("User activated successfully"));
     }
+
+    @PostMapping(CHANGE_PASSWORD)
+    public ResponseEntity<MessageResponse> changePassword(@Valid @RequestBody ChangePassword password) {
+
+        userService.changePassword(password.getOldPassword(), password.getNewPassword());
+        return ResponseEntity.ok(new MessageResponse("Password changed successfully"));
+    }
+
 }

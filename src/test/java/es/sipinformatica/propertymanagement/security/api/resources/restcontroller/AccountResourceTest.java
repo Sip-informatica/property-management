@@ -1,7 +1,5 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;

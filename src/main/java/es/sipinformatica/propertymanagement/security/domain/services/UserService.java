@@ -96,13 +96,38 @@ public class UserService {
 
     public void changePassword(String oldPassword, @NonNull String newPassword) {
         User user = userRepository.findByUsername(SecurityService.getCurrentUser())
-                .orElseThrow(() -> new ResourceNotFoundException(ERROR + "The username don't exist: " + (SecurityService.getCurrentUser())));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        ERROR + "The username don't exist: " + (SecurityService.getCurrentUser())));
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new ResourceNotFoundException(ERROR + "Old password is not correct");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    public User requestPasswordReset(String email) {
+        User user = userRepository.findByEmail(email).filter(User::getIsEnabled)
+                .orElseThrow(() -> new ResourceNotFoundException(ERROR + "The email don't exist: " + email));
+        String resetKey = RandomStringUtils.random(20, 0, 0, true, true, null, new SecureRandom());
+        user.setResetKey(resetKey);
+        user.setResetDate(LocalDateTime.now());
+        userRepository.save(user);
+        return user;
+    }
+
+    public void finishPasswordReset(String resetToken, @NonNull String newPassword) {
+        User user = userRepository.findByResetKey(resetToken)
+                .orElseThrow(() -> new ResourceNotFoundException(ERROR + "The resetToken don't exist: " + resetToken));
+        if (user.getResetDate().plusHours(1).isBefore(LocalDateTime.now())) {
+            throw new ResourceNotFoundException(ERROR + "The resetToken is expired");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetKey(null);
+        user.setResetDate(null);
+        userRepository.save(user);
+
+    }
+
 
     @Scheduled(cron = "@weekly")
     public void deleteExpiredUsers() {
@@ -113,5 +138,5 @@ public class UserService {
             }
         });
     }
-
+    
 }

@@ -36,6 +36,10 @@ public class MailService {
     public void sendActivationEmail(User user, String siteUrl) throws MessagingException {
         sendEmailFromTemplate(user, "activationEmail", siteUrl, "email.activation.subject");
     }
+    @Async
+    public void sendResetPasswordEmail(User user, String siteUrl) throws MessagingException {
+        sendEmailFromTemplate(user, "passwordResetEmail", siteUrl, "email.reset.subject");
+    }
 
     @Async
     public void sendEmailFromTemplate(User user, String templateName, String siteUrl, String titleKey ) throws MessagingException {
@@ -69,6 +73,6 @@ public class MailService {
         message.setText(content);
         javaMailSender.send(message);
 
-    }
+    }    
 
 }

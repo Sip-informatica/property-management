@@ -18,6 +18,9 @@ public class UtilService {
     private static final String CONTROL_SOLO_LETRAS = "KPQS"; // Sólo admiten letras como caracter de control
     private static final String CONTROL_NUMERO_A_LETRA = "JABCDEFGHI"; // Conversión de dígito a letra de control.
 
+    private UtilService() {        
+    }
+
     public static boolean validateNIF(String dni) {
         dni = dni.toUpperCase();
         return Arrays.binarySearch(INVALIDOS, dni) < 0

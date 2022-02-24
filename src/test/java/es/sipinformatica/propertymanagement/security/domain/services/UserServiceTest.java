@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
@@ -44,6 +47,9 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private List<User> userList;
     private User userDefault;
     private Optional<User> userDefaultOptional;
@@ -64,7 +70,11 @@ class UserServiceTest {
         when(userRepository.findAll()).thenReturn(userList);
         when(userRepository.findByActivationKey(any())).thenReturn(userDefaultOptional);
         when(userRepository.save(any(User.class))).thenReturn(userDefault);
-        when(roleRepository.findByName(any(ERole.class))).thenReturn(Optional.of(Role.builder().name(ERole.ROLE_MANAGER).build()));
+        when(roleRepository.findByName(any(ERole.class)))
+                .thenReturn(Optional.of(Role.builder().name(ERole.ROLE_MANAGER).build()));
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(userDefault));
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(userDefault));
+        when(userRepository.findByResetKey(any())).thenReturn(Optional.of(userDefault));                        
 
     }
 
@@ -74,7 +84,7 @@ class UserServiceTest {
         User userRegistred = userService.registerUser(userSignupRequest);
         log.info("userRegistred: {}", userRegistred);
         log.info("userList: {}", userList.get(0));
-       
+
         Mockito.verify(userRepository, Mockito.times(1)).delete(any(User.class));
 
         assertEquals(userSignupRequest.getUsername(), userRegistred.getUsername());
@@ -124,4 +134,37 @@ class UserServiceTest {
         Mockito.verify(userRepository, Mockito.times(1)).delete(userDefault);
     }
 
+    @Test
+    void shouldChangePassword() {
+        userDefault.setPassword(passwordEncoder.encode("1Ppassword"));
+        userService.changePassword("1Ppassword", "new1Ppassword");
+
+        assertNotEquals(userDefault.getPassword(), passwordEncoder.encode("1Ppassword"));
+        assertTrue(passwordEncoder.matches("new1Ppassword", userDefault.getPassword()));
+
+    }
+
+    @Test
+    void shouldRequestPasswordReset() {
+        userDefault.setIsEnabled(true);
+        userService.requestPasswordReset("mail@www.es");
+
+        assertTrue(userDefault.getResetKey().length() == 20);
+        assertTrue(userDefault.getResetDate().isAfter(LocalDateTime.now().minusHours(1)));
+
+    }
+
+    @Test
+    void shouldFinishPasswordReset() {
+        userDefault.setResetKey("tokenResetKey");
+        userDefault.setResetDate(LocalDateTime.now());
+        userService.finishPasswordReset("tokenResetKey", "new1Ppassword");
+
+        assertNotEquals(userDefault.getResetKey(), "tokenResetKey");
+        assertNotEquals(userDefault.getResetDate(), LocalDateTime.now().minusHours(1));
+        assertTrue(passwordEncoder.matches("new1Ppassword", userDefault.getPassword()));
+
+        Mockito.verify(userRepository, times(1)).save(userDefault);
+
+    }
 }

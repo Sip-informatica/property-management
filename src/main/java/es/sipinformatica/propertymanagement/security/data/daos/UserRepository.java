@@ -23,6 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
     Optional<User> findByEmailAndActivationKey(@NonNull String email, Object object);
     Optional<User> findByPhoneAndActivationKey(@NonNull String phone, Object object);
     Optional<User> findByDniAndActivationKey(String dni, Object object);
-       
+    Optional<User> findByResetKey(String resetToken);       
            
 }

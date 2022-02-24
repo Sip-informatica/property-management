@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.sipinformatica.propertymanagement.security.api.dtos.request.ChangePassword;
+import es.sipinformatica.propertymanagement.security.api.dtos.request.ResetPassword;
 import es.sipinformatica.propertymanagement.security.api.dtos.request.UserSignupRequest;
 import es.sipinformatica.propertymanagement.security.api.httpserrors.MessageResponse;
 import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
@@ -78,10 +78,25 @@ public class AcocountResource {
     }
 
     @PostMapping(CHANGE_PASSWORD)
-    public ResponseEntity<MessageResponse> changePassword(@Valid @RequestBody ChangePassword password) {
+    public ResponseEntity<MessageResponse> changePassword(@Valid @RequestBody ChangePassword changePassword) {
 
-        userService.changePassword(password.getOldPassword(), password.getNewPassword());
+        userService.changePassword(changePassword.getOldPassword(), changePassword.getNewPassword());
         return ResponseEntity.ok(new MessageResponse("Password changed successfully"));
     }
+
+    @PostMapping(RESET_PASSWORD + "/init")
+    public ResponseEntity<MessageResponse> requestPasswordReset(@RequestBody String email, HttpServletRequest request)
+            throws MessagingException {
+        User user = userService.requestPasswordReset(email);
+        mailService.sendResetPasswordEmail(user, request.getRequestURL().toString());
+        return ResponseEntity.ok(new MessageResponse("Email sent"));
+    }
+
+    @PostMapping(RESET_PASSWORD + "/finish")
+    public ResponseEntity<MessageResponse> finishPasswordReset(@Valid @RequestBody ResetPassword resetPassword) {
+        userService.finishPasswordReset(resetPassword.getResetToken(), resetPassword.getNewPassword());
+        return ResponseEntity.ok(new MessageResponse("Password reset successfully"));
+    }
+
 
 }

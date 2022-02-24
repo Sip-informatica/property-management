@@ -6,11 +6,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class SecurityService {
-   
+
+    private SecurityService() {        
+    }
+
     public static String getCurrentUser() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
-        
+
         String userName = "";
         if (authentication != null) {
             if (authentication.getPrincipal() instanceof UserDetails) {

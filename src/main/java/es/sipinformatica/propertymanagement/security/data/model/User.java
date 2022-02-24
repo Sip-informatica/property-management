@@ -59,6 +59,7 @@ public class User {
     @Column(name = "reset_key", length = 20)
     @JsonIgnore
     private String resetKey;
+    private LocalDateTime resetDate;
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;

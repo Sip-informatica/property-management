@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -112,5 +113,26 @@ class MailServiceTest {
         assertEquals("text/html;charset=UTF-8", message.getDataHandler().getContentType());
         assertTrue(message.getContent().toString().contains(
                 "siteUrl/activate/null"));
+    }
+
+    @Test
+    void shouldSendResetPasswordEmail() throws MailException, MessagingException, IOException {
+        
+        userDefault.setResetKey("RandomStringResetKey");
+        userDefault.setResetDate(LocalDateTime.now());
+        MimeMessage mimeMessage = new MimeMessage((Session) null);
+        when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
+        mailService.sendResetPasswordEmail(userDefault, "siteUrl");
+        ArgumentCaptor<MimeMessage> emailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+
+        verify(javaMailSender).send(emailCaptor.capture());
+        MimeMessage message = (MimeMessage) emailCaptor.getValue();
+
+        assertEquals("mail@www.es", message.getRecipients(MimeMessage.RecipientType.TO)[0].toString());
+        assertEquals("Restablecer contraseña", message.getSubject());
+        assertEquals("text/html;charset=UTF-8", message.getDataHandler().getContentType());
+        assertTrue(message.getContent().toString().contains("RandomStringResetKey"));
+        assertTrue(message.getContent().toString().contains("este código de verificación"));
+
     }
 }

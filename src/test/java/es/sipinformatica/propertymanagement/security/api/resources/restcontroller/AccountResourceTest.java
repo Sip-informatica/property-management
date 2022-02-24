@@ -1,10 +1,14 @@
 package es.sipinformatica.propertymanagement.security.api.resources.restcontroller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.mail.MessagingException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +26,8 @@ import es.sipinformatica.propertymanagement.security.data.daos.UserRepository;
 import es.sipinformatica.propertymanagement.security.data.model.ERole;
 import es.sipinformatica.propertymanagement.security.data.model.Role;
 import es.sipinformatica.propertymanagement.security.data.model.User;
+import es.sipinformatica.propertymanagement.security.domain.services.MailService;
+import es.sipinformatica.propertymanagement.security.domain.services.UserService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient(timeout = "36000")
@@ -36,6 +42,10 @@ class AccountResourceTest {
     private WebTestClient webTestClient;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private UserService userService;
+    @MockBean
+    private MailService mailService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -69,18 +79,27 @@ class AccountResourceTest {
         when(userRepository.findByUsername("admin")).thenReturn(Optional.of(userBuilder));
         this.webTestClient.post().uri(API + CHANGE_PASSWORD).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{\"oldPassword\":\"1Password\",\"newPassword\":\"2Passwordnew\"}")
-                .exchange().expectStatus().isOk().expectBody().jsonPath("message").isEqualTo("Password changed successfully");
+                .exchange().expectStatus().isOk().expectBody().jsonPath("message")
+                .isEqualTo("Password changed successfully");
 
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = { "ADMIN" }, password = "1Password")
-    void shouldChangePasswordNotCorrect() {
-        when(userRepository.findByUsername("admin")).thenReturn(Optional.of(userBuilder));
-        this.webTestClient.post().uri(API + CHANGE_PASSWORD).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("{\"oldPassword\":\"Password\",\"newPassword\":\"2Passwordnew\"}")
-                .exchange().expectStatus().isNotFound().expectBody().jsonPath("errors").isEqualTo("Error: Old password is not correct");
+    void shouldRequestPasswordReset() throws MessagingException {
+        when(userService.requestPasswordReset(any())).thenReturn(userBuilder);
+        this.webTestClient.post().uri(API + RESET_PASSWORD + "/init").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("{\"email\":\"emailTest@sip.es\"}").exchange().expectStatus().isOk().expectBody()
+                .jsonPath("message").isEqualTo("Email sent");
+        verify(mailService).sendResetPasswordEmail(any(User.class), any());
 
     }
 
+    @Test
+    void shouldFinishPasswordReset() {
+        this.webTestClient.post().uri(API + RESET_PASSWORD + "/finish").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("{\"resetToken\":\"token\",\"newPassword\":\"2Passwordnew\"}").exchange().expectStatus()
+                .isOk()
+                .expectBody().jsonPath("message").isEqualTo("Password reset successfully");
+        verify(userService).finishPasswordReset(any(), any());
+    }
 }

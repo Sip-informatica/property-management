@@ -128,7 +128,6 @@ public class UserService {
 
     }
 
-
     @Scheduled(cron = "@weekly")
     public void deleteExpiredUsers() {
         log.info("Tarea usando expresiones cron - " + LocalDateTime.now());
@@ -138,5 +137,5 @@ public class UserService {
             }
         });
     }
-    
+
 }

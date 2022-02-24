@@ -92,10 +92,10 @@ public class AcocountResource {
         return ResponseEntity.ok(new MessageResponse("Email sent"));
     }
 
-    @PostMapping(RESET_PASSWORD + "/finish/{resetToken}")
+    @PostMapping(RESET_PASSWORD + "/finish")
     public ResponseEntity<MessageResponse> finishPasswordReset(@Valid @RequestBody ResetPassword resetPassword) {
         userService.finishPasswordReset(resetPassword.getResetToken(), resetPassword.getNewPassword());
-        return ResponseEntity.ok(new MessageResponse("Password reseted successfully"));
+        return ResponseEntity.ok(new MessageResponse("Password reset successfully"));
     }
 
 

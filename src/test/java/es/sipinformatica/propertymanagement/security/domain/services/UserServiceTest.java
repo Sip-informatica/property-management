@@ -149,7 +149,7 @@ class UserServiceTest {
         userDefault.setIsEnabled(true);
         userService.requestPasswordReset("mail@www.es");
 
-        assertTrue(userDefault.getResetKey().length() == 20);
+        assertEquals(20, userDefault.getResetKey().length());
         assertTrue(userDefault.getResetDate().isAfter(LocalDateTime.now().minusHours(1)));
 
     }
@@ -160,7 +160,7 @@ class UserServiceTest {
         userDefault.setResetDate(LocalDateTime.now());
         userService.finishPasswordReset("tokenResetKey", "new1Ppassword");
 
-        assertNotEquals(userDefault.getResetKey(), "tokenResetKey");
+        assertNotEquals("tokenResetKey", userDefault.getResetKey());
         assertNotEquals(userDefault.getResetDate(), LocalDateTime.now().minusHours(1));
         assertTrue(passwordEncoder.matches("new1Ppassword", userDefault.getPassword()));
 
